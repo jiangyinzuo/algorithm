@@ -5,7 +5,7 @@ wiki on icpc contest and related algorithms
 
 ## 参考资料
 
-[ALGORITHM.md](./doc/ALGORITHM.md)
+[REFERENCE.md](./doc/REFERENCE.md)
 
 ## 目录说明
 
