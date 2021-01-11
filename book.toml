@@ -1,0 +1,14 @@
+[book]
+authors = ["ChiangYintso"]
+language = "en"
+multilingual = false
+src = "src"
+title = "ICPC wiki"
+
+[output.html]
+mathjax-support = true
+
+[preprocessor.toc]
+command = "mdbook-toc"
+renderer = ["html"]
+marker = "[TOC]"
