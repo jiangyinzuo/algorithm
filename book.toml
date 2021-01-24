@@ -2,7 +2,7 @@
 authors = ["ChiangYintso"]
 language = "en"
 multilingual = false
-src = "src"
+src = "doc"
 title = "ICPC wiki"
 
 [output.html]
