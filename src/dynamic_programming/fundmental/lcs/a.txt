@@ -1,0 +1,4 @@
+bye
+world
+foo
+baz

@@ -1,2 +1,12 @@
+# ignore all files without extension
+*
+!*/
+!*.*
+
+.exe
+
 book
 resources
+cmake-build*
+Cargo.lock
+target
