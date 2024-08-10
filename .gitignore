@@ -9,4 +9,5 @@ book
 resources
 cmake-build*
 Cargo.lock
+interview-private
 target
