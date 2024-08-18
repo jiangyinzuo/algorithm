@@ -1,0 +1,1192 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>练习 - Algorithms</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    </head>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('light')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="编程语言.html"><strong aria-hidden="true">1.</strong> 编程语言</a></li><li class="chapter-item expanded "><a href="算法基础.html"><strong aria-hidden="true">2.</strong> 算法基础</a></li><li class="chapter-item expanded "><a href="动态规划.html"><strong aria-hidden="true">3.</strong> 动态规划</a></li><li class="chapter-item expanded "><a href="计算几何.html"><strong aria-hidden="true">4.</strong> 计算几何</a></li><li class="chapter-item expanded "><a href="树上问题.html"><strong aria-hidden="true">5.</strong> 树上问题</a></li><li class="chapter-item expanded "><a href="数据结构.html"><strong aria-hidden="true">6.</strong> 数据结构</a></li><li class="chapter-item expanded "><a href="数论.html"><strong aria-hidden="true">7.</strong> 数论</a></li><li class="chapter-item expanded "><a href="数学.html"><strong aria-hidden="true">8.</strong> 数学</a></li><li class="chapter-item expanded "><a href="随机化算法.html"><strong aria-hidden="true">9.</strong> 随机化算法</a></li><li class="chapter-item expanded "><a href="图论.html"><strong aria-hidden="true">10.</strong> 图论</a></li><li class="chapter-item expanded "><a href="字符串.html"><strong aria-hidden="true">11.</strong> 字符串</a></li><li class="chapter-item expanded "><a href="练习.html" class="active"><strong aria-hidden="true">12.</strong> 练习</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Algorithms</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <ul>
+<li><a href="#%E6%A0%91%E4%B8%8A%E9%97%AE%E9%A2%98%E7%BB%83%E4%B9%A0">树上问题练习</a>
+<ul>
+<li><a href="#%E6%A0%91%E7%9A%84dfs">树的dfs</a></li>
+</ul>
+</li>
+<li><a href="#%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%BB%83%E4%B9%A0">数据结构练习</a>
+<ul>
+<li><a href="#%E7%BA%BF%E6%AE%B5%E6%A0%91%E7%BB%83%E4%B9%A0">线段树练习</a></li>
+</ul>
+</li>
+<li><a href="#%E6%95%B0%E8%AE%BA%E7%BB%83%E4%B9%A0">数论练习</a>
+<ul>
+<li><a href="#%E7%B4%A0%E6%95%B0%E7%AD%9B">素数筛</a></li>
+<li><a href="#gcdlcm">GCD、LCM</a></li>
+<li><a href="#%E5%9B%A0%E6%95%B0%E4%B8%AA%E6%95%B0%E5%AE%9A%E7%90%86">因数个数定理</a></li>
+<li><a href="#pollard_rho">pollard_rho</a></li>
+</ul>
+</li>
+<li><a href="#%E6%95%B0%E5%AD%A6%E9%A2%98%E7%BB%83%E4%B9%A0">数学题练习</a>
+<ul>
+<li><a href="#%E9%93%B6%E5%B7%9D%E5%8C%BA%E5%9F%9F%E8%B5%9Bf">银川区域赛F</a></li>
+</ul>
+</li>
+<li><a href="#%E5%9B%BE%E8%AE%BA%E7%BB%83%E4%B9%A0">图论练习</a>
+<ul>
+<li><a href="#%E6%8B%93%E6%89%91%E6%8E%92%E5%BA%8F">拓扑排序</a>
+<ul>
+<li><a href="#poj1094">POJ1094</a></li>
+</ul>
+</li>
+<li><a href="#%E5%9B%BE%E7%9A%84bfs">图的BFS</a>
+<ul>
+<li><a href="#ccpc2019d-path-%E6%B1%82%E6%9C%89%E5%90%91%E5%9B%BE%E7%AC%ACk%E7%9F%AD%E7%9A%84%E8%B7%AF%E5%BE%84">CCPC2019D Path 求有向图第k短的路径</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="树上问题练习"><a class="header" href="#树上问题练习">树上问题练习</a></h1>
+<h2 id="树的dfs"><a class="header" href="#树的dfs">树的dfs</a></h2>
+<pre><code class="language-c++">std::vector&lt;int&gt; tree[100002];
+int father[1000002];
+int distance[1000002];
+int max_distance[1000002];
+bool visited[1000002] = {false};
+
+void dfs(int cur_v, int depth) {
+    visited[cur_v] = true;
+    max_distance[cur_v] = distance[cur_v] = depth;
+
+    for (auto &amp;i : tree[cur_v]) {
+        if (!visited[i]) {
+            father[i] = cur_v;
+            dfs(i, depth + 1);
+            max_distance[cur_v] = std::max(max_distance[cur_v], max_distance[i]);
+        }
+    }
+}
+</code></pre>
+<pre><code class="language-c++">father[n] = 0;
+dfs(n, 0);
+</code></pre>
+<h1 id="数据结构练习"><a class="header" href="#数据结构练习">数据结构练习</a></h1>
+<h2 id="线段树练习"><a class="header" href="#线段树练习">线段树练习</a></h2>
+<p>区间更新（加法）、区间查询（最值）线段树</p>
+<pre><code class="language-c++">//
+// Created by jiang on 2020/8/12.
+// 银川区域赛G
+
+#include &lt;cstdio&gt;
+#include &lt;cstring&gt;
+#include &lt;array&gt;
+
+long long seq[100008];
+std::array&lt;int, 4&gt; seg_tree[400008]; // 本题build初始化
+std::array&lt;int, 4&gt; multi_tags[400008];
+
+/**
+ * 下推懒惰标记
+ * @param l 左区间端点
+ * @param r 右区间端点
+ * @param num 序号
+ */
+void push_down(int l, int r, int num) {
+    for (int i = 0; i &lt; 4; ++i)
+        if (multi_tags[num][i]) {
+            seg_tree[num &lt;&lt; 1][i] += multi_tags[num][i];
+            seg_tree[num &lt;&lt; 1 | 1][i] += multi_tags[num][i];
+            multi_tags[num &lt;&lt; 1][i] += multi_tags[num][i];
+            multi_tags[num &lt;&lt; 1 | 1][i] += multi_tags[num][i];
+            multi_tags[num][i] = 0;
+        }
+}
+
+/**
+ * 区间更新
+ * @param update_l 更新区间左端点
+ * @param update_r 更新区间右端点
+ * @param value 更新的值
+ * @param l 当前搜索区间左端点
+ * @param r 当前搜索区间右端点
+ * @param num 线段树序号
+ */
+void update(int update_l, int update_r, long long value, int l, int r, int num) {
+#define ADD(n, v) (multi_tags[num][n] += v, seg_tree[num][n] += v)
+    if (update_l &lt;= l &amp;&amp; r &lt;= update_r) {
+        if (value == 2) ADD(0, 1);
+        else if (value == 3) ADD(1, 1);
+        else if (value == 4) ADD(0, 2);
+        else if (value == 5) ADD(2, 1);
+        else if (value == 6) {
+            ADD(0, 1);
+            ADD(1, 1);
+        } else if (value == 7) ADD(3, 1);
+        else if (value == 8) ADD(0, 3);
+        else if (value == 9) ADD(1, 2);
+        else if (value == 10) {
+            ADD(0, 1);
+            ADD(2, 1);
+        }
+        return;
+    }
+
+    push_down(l, r, num);
+
+    int mid = (l + r) / 2;
+    if (update_l &lt;= mid) {
+        update(update_l, update_r, value, l, mid, num &lt;&lt; 1);
+    }
+    if (mid + 1 &lt;= update_r) {
+        update(update_l, update_r, value, mid + 1, r, num &lt;&lt; 1 | 1);
+    }
+    for (int i = 0; i &lt; 4; ++i)
+        seg_tree[num][i] = std::max(seg_tree[num &lt;&lt; 1][i], seg_tree[num &lt;&lt; 1 | 1][i]);
+}
+
+/**
+ * 区间查询
+ * @param query_l 查询区间左端点
+ * @param query_r 查询区间右端点
+ * @param l 当前搜索区间左端点
+ * @param r 当前搜索区间右端点
+ * @param num 线段树序号
+ * @return 区间查询结果（求区间和）
+ */
+long long query(int query_l, int query_r, int l, int r, int num) {
+
+    if (query_l &lt;= l &amp;&amp; r &lt;= query_r) {
+        int max_value = 0;
+        for (auto &amp;i : seg_tree[num]) {
+            max_value = std::max(max_value, i);
+        }
+        return max_value;
+    }
+
+    push_down(l, r, num);
+
+    long long result = 0;
+    int mid = (l + r) / 2;
+    if (query_l &lt;= mid) {
+        result = std::max(result, query(query_l, query_r, l, mid, num &lt;&lt; 1));
+    }
+    if (mid + 1 &lt;= query_r) {
+        result = std::max(result, query(query_l, query_r, mid + 1, r, num &lt;&lt; 1 | 1));
+    }
+    return result;
+}
+
+int main() {
+    int n, q;
+    scanf("%d %d", &amp;n, &amp;q);
+
+    memset(seq, 1, sizeof(seq));
+    char op[10];
+    int n1, n2, n3;
+    for (int i = 0; i &lt; q; ++i) {
+        scanf("%s %d %d", op, &amp;n1, &amp;n2);
+        if (op[1] == 'U') {
+            scanf("%d", &amp;n3);
+            update(n1, n2, n3, 1, n, 1);
+        } else {
+            printf("ANSWER %lld\n", query(n1, n2, 1, n, 1));
+        }
+    }
+    return 0;
+}
+</code></pre>
+<h1 id="数论练习"><a class="header" href="#数论练习">数论练习</a></h1>
+<h2 id="素数筛"><a class="header" href="#素数筛">素数筛</a></h2>
+<p>luogup1835 求【L， R】间的素数个数</p>
+<pre><code class="language-c++">//
+// Created by jiang on 2020/8/16.
+//
+
+#include &lt;cstdio&gt;
+#include &lt;bitset&gt;
+#include &lt;vector&gt;
+
+std::bitset&lt;46342&gt; is_prime;
+std::bitset&lt;1000001&gt; is_comp;
+std::vector&lt;long long&gt; primes;
+
+void thieve() {
+    is_prime.flip();
+    for (int i = 2; i &lt;= 46341; ++i) {
+        if (is_prime[i]) {
+            primes.push_back(i);
+            for (int j = i; j &lt;= 46341; j += i) {
+                is_prime[j] = false;
+            }
+        }
+    }
+}
+
+int main() {
+    thieve();
+    long long l, r;
+    scanf("%lld %lld", &amp;l, &amp;r);
+    if (l == 1) l = 2;
+    for (auto &amp;i : primes) {
+        if (i * i &gt; r) break;
+        for (long long j = std::max(i &lt;&lt; 1, (l + i - 1) / i * i); j &lt;= r; j += i)
+            is_comp[j - l] = true;
+    }
+    printf("%llu\n", r - l + 1 - is_comp.count());
+    return 0;
+}
+</code></pre>
+<h2 id="gcdlcm"><a class="header" href="#gcdlcm">GCD、LCM</a></h2>
+<p>https://www.luogu.com.cn/problem/P1414</p>
+<p>从n个数中取出1、2、3、...、n个数，使其gcd最大。</p>
+<p>解：求出每个因数出现的次数，并对每个次数记录最大的因数。</p>
+<pre><code class="language-c++">#include &lt;cstdio&gt;
+
+int arr[100009];
+int prime_count[1000009] = {0};
+int answer[1000009] = {0};
+
+inline int max(int a, int b) {
+    return a &gt; b ? a : b;
+}
+
+int main() {
+    int n;
+    scanf("%d", &amp;n);
+    for (int i = 0; i &lt; n; ++i) {
+        scanf("%d", arr + i);
+    }
+
+    for (int i = 0; i &lt; n; ++i) {
+        for (int j = 1; j * j &lt;= arr[i]; ++j) {
+            if (arr[i] % j == 0) {
+                prime_count[j]++;
+                answer[prime_count[j]] = max(answer[prime_count[j]], j);
+                if (j * j &lt; arr[i]) {
+                    prime_count[arr[i] / j]++;
+                    answer[prime_count[arr[i] / j]] = max(answer[prime_count[arr[i] / j]], arr[i] / j);
+                }
+            }
+        }
+    }
+
+    for (int i = 1; i &lt;= n; ++i)
+        printf("%d\n", answer[i]);
+
+    return 0;
+}
+
+</code></pre>
+<p><strong>hdu5656 求n个数所有挑选组合的gcd之和（gcd+dp）</strong></p>
+<pre><code class="language-c++">//
+// Created by Jiang Yinzuo on 2020/7/17.
+//
+
+#include &lt;cstdio&gt;
+#include &lt;algorithm&gt;
+#include &lt;cstring&gt;
+
+const int MOD = 100000007;
+long long dp[1001][1001];
+int arr[1001];
+int gcd[1001][1001] = {0};
+
+void get_gcd(int n, int m) {
+    for (int i = 1; i &lt;= 1000; ++i) {
+        for (int j = 1; j &lt;= 1000; ++j) {
+            if (!gcd[i][j]) {
+                for (int k = 1; k * i &lt;= n &amp;&amp; k * j &lt;= m; ++k) {
+                    gcd[k * i][k * j] = k;
+                }
+            }
+        }
+    }
+}
+
+void solve(int n, int max_gcd) {
+    memset(dp, 0, sizeof(dp));
+    for (int i = 1; i &lt;= n; ++i) {
+        dp[i][arr[i]] = 1;
+        for (int j = 1; j &lt;= max_gcd; ++j) {
+            dp[i][j] = (dp[i][j] + dp[i - 1][j]) % MOD;
+            dp[i][gcd[arr[i]][j]] = (dp[i][gcd[arr[i]][j]] + dp[i - 1][j]) % MOD;
+        }
+    }
+
+    long long answer = 0;
+    for (int i = 1; i &lt;= max_gcd; ++i) {
+        answer = (answer + dp[n][i] * i) % MOD;
+    }
+    printf("%lld\n", answer);
+}
+
+int main() {
+    get_gcd(1000, 1000);
+    int t;
+    scanf("%d", &amp;t);
+    while (t--) {
+        int n;
+        scanf("%d", &amp;n);
+        int max_gcd = 0;
+        for (int i = 1; i &lt;= n; ++i) {
+            scanf("%d", arr + i);
+            max_gcd = std::max(max_gcd, arr[i]);
+        }
+        solve(n, max_gcd);
+    }
+    return 0;
+}
+
+</code></pre>
+<p><strong>cf1366D 对正整数a，找到a的大于1的因数b，c使得$$\gcd(b+c,a)=1$$</strong></p>
+<p>解：若$$\gcd(b, c) = g &gt; 1$$，则$$b+c和a$$至少有g这个公因数。故仅当存在$$\gcd(b, c) = 1$$时，问题有解。</p>
+<p>$$gcd(b, c) = 1 \iff gcd(b+c, c) = 1 \iff gcd(b+c,b) = 1 \iff \gcd(b+c, cb^k) = 1$$。故找到a的最小质因数$$p$$（提前打表），解为$$b = p^k, c = \frac{a}{p^k}, c\bmod b \neq 0 $$</p>
+<pre><code class="language-c++">//
+// Created by Jiang Yinzuo on 2020/7/23.
+//
+
+#include &lt;vector&gt;
+#include &lt;cstdio&gt;
+
+int min_prime[10000007] = {0};
+
+void get_min_prime_factor() {
+    for (int i = 2; i &lt;= 3163; ++i) {
+        if (min_prime[i] == 0) {
+            for (int j = i * 2; j &lt;= 10000000; j += i) {
+                if (min_prime[j] == 0)
+                    min_prime[j] = i;
+            }
+        }
+    }
+}
+
+std::vector&lt;int&gt; b_ans, c_ans;
+
+void solve(int a) {
+    if (min_prime[a] == 0) {
+        b_ans.push_back(-1);
+        c_ans.push_back(-1);
+        return;
+    }
+    int c = a;
+    while (c % min_prime[a] == 0) {
+        c /= min_prime[a];
+    }
+    if (c &gt; 1) {
+        b_ans.push_back(min_prime[a]);
+        c_ans.push_back(c);
+    } else {
+        b_ans.push_back(-1);
+        c_ans.push_back(-1);
+    }
+}
+
+int main() {
+    get_min_prime_factor();
+    int n;
+    scanf("%d", &amp;n);
+    int a;
+    for (int i = 0; i &lt; n; ++i) {
+        scanf("%d", &amp;a);
+        solve(a);
+    }
+    for (auto &amp;i : b_ans) {
+        printf("%d ", i);
+    }
+    puts("");
+    for (auto &amp;i : c_ans) {
+        printf("%d ", i);
+    }
+    puts("");
+    return 0;
+}
+</code></pre>
+<h2 id="因数个数定理"><a class="header" href="#因数个数定理">因数个数定理</a></h2>
+<p><strong>hdu6069</strong>：求
+$$
+(∑\limits_{i=l}^rd(i^k)) \bmod998244353 \space \space \space (1≤l≤r≤10^{12},r−l≤10^6,1≤k≤10^7).
+$$
+$$d(x)$$表示x的因数个数。</p>
+<p>显然，1e6以上的质数最多存在一个。故先打表得到1-1e6之间的质数。枚举1-1e6中的每个质数。根据该质数在【l, r】中的出现的次数更新$$d(i^k)$$，并将i /= 质数。质数^2大于r时停止遍历。</p>
+<pre><code class="language-c++">//
+// Created by Jiang Yinzuo on 2020/7/17.
+//
+
+#include &lt;cstdio&gt;
+#include &lt;vector&gt;
+#include &lt;cstring&gt;
+
+const int MOD = 998244353;
+bool is_prime[1000006];
+std::vector&lt;int&gt; primes;
+
+void sieve(int n) {
+    memset(is_prime, true, sizeof(is_prime));
+    for (int i = 2; i &lt;= n; ++i) {
+        if (is_prime[i]) {
+            primes.push_back(i);
+            for (int j = i + i; j &lt;= n; j += i) {
+                is_prime[j] = false;
+            }
+        }
+    }
+}
+
+void solve(long long l, long long r, long long k) {
+    static long long num[1000006];
+    static long long factor_count[1000006];
+    for (long long i = l; i &lt;= r; ++i) {
+        num[i - l] = i;
+        factor_count[i - l] = 1;
+    }
+
+    for (auto &amp;prime : primes) {
+        if (prime * prime &gt; r) break;
+        long long i = (long long) (l / prime) * prime;
+        while (i &lt; l) i += prime;
+        for (; i &lt;= r; i += prime) {
+            long long count = 0;
+            while (num[i - l] % prime == 0) {
+                num[i - l] /= prime;
+                count++;
+            }
+            factor_count[i - l] = factor_count[i - l] * (count * k + 1) % MOD;
+        }
+    }
+
+    long long answer = 0;
+    for (long long i = l; i &lt;= r; ++i) {
+        if (num[i - l] == 1)
+            answer = (answer + factor_count[i - l]) % MOD;
+        else answer = (answer + factor_count[i - l] * (k + 1) % MOD) % MOD;
+    }
+    printf("%lld\n", answer);
+}
+
+int main() {
+    sieve(1000005);
+    int t;
+    scanf("%d", &amp;t);
+    while (t--) {
+        long long l, r, k;
+        scanf("%lld %lld %lld", &amp;l, &amp;r, &amp;k);
+        solve(l, r, k);
+    }
+    return 0;
+}
+
+</code></pre>
+<p><strong>南京2018 J</strong></p>
+<pre><code class="language-c++">//
+// Created by jiang on 2020/9/22.
+//
+
+#include &lt;cstdio&gt;
+#include &lt;vector&gt;
+#include &lt;unordered_map&gt;
+
+constexpr int MAX_N = 1000009;
+
+std::vector&lt;long long&gt; primes;
+
+void euler_thieve() {
+    static bool not_prime[MAX_N] = {false};
+    for (int i = 2; i * i &lt; MAX_N; i++) {
+        if (!not_prime[i]) {
+            primes.push_back(i);
+        }
+        for (int j = 0; j &lt; primes.size() &amp;&amp; i * primes[j] &lt; MAX_N; ++j) {
+            not_prime[i * primes[j]] = true;
+            if (i % primes[j] == 0) {
+                break;
+            }
+        }
+    }
+}
+
+std::unordered_map&lt;int, std::vector&lt;long long&gt;&gt; factor_pos;
+
+void factor(int x, int pos) {
+    // c++11能用for-range循环
+    for (int i = 0; i &lt; primes.size() &amp;&amp; primes[i] * primes[i] &lt;= x; ++i) {
+        if (x % primes[i] == 0) {
+            factor_pos[primes[i]].push_back(pos);
+            do {
+                x /= primes[i];
+            } while (x % primes[i] == 0);
+        }
+    }
+    if (x &gt; 1) factor_pos[x].push_back(pos);
+}
+
+int main() {
+    euler_thieve();
+    int n, a;
+    scanf("%d", &amp;n);
+    for (int i = 1; i &lt;= n; ++i) {
+        scanf("%d", &amp;a);
+        factor(a, i);
+    }
+    long long ans = 0;
+    for (auto &amp;i : factor_pos) {
+        ans += i.second[0] * (n - i.second[0] + 1);
+        for (int j = 1; j &lt; i.second.size(); ++j) {
+            ans += (i.second[j] - i.second[j - 1]) * (n - i.second[j] + 1);
+        }
+    }
+    printf("%lld\n", ans);
+    return 0;
+}
+</code></pre>
+<h5 id="ccpc威海2020-d"><a class="header" href="#ccpc威海2020-d">CCPC威海2020 D</a></h5>
+<p>判断一个数c$$( 1\le c \le 10^{18})$$分解质因数后是否存在相等的质因子。</p>
+<p>解：素数筛1e6的质数，c若符合条件，则要么存在两个小于1e6的相等的质因子，要么存在两个大于1e6的相等的质因子、且剩下的质因子都小于1e6。</p>
+<pre><code class="language-c++">#include &lt;cstdio&gt;
+#include &lt;vector&gt;
+#include &lt;cmath&gt;
+constexpr int MAX_N = 1000005;
+std::vector&lt;long long&gt; primes;
+bool not_prime[MAX_N] = {false};
+
+void euler_thieve() {
+    for (long long i = 2; i &lt; MAX_N; i++) {
+        if (!not_prime[i]) {
+            primes.push_back(i);
+        }
+        for (int j = 0; j &lt; primes.size() &amp;&amp; i * primes[j] &lt; MAX_N; ++j) {
+            not_prime[i * primes[j]] = true;
+            if (i % primes[j] == 0) {
+                break;
+            }
+        }
+    }
+}
+int main() {
+    euler_thieve();
+    int t;
+    scanf("%d", &amp;t);
+    while (t--) {
+        unsigned long long b;
+        scanf("%llu", &amp;b);
+        bool yes = false;
+        for (auto p : primes) {
+            if (b % p == 0) {
+                b /= p;
+                if (b % p == 0) {
+                    yes = true;
+                    break;
+                }
+                if (b == 1) {
+                    break;
+                }
+                auto _temp = (unsigned long long)sqrt(b);
+                if (_temp * _temp == b) {
+                    yes = true;
+                    break;
+                }
+
+            }
+        }
+        auto _temp = (unsigned long long)sqrt(b);
+        if (_temp != 1 &amp;&amp; _temp * _temp == b) {
+            yes = true;
+        }
+        puts(yes ? "yes" : "no");
+    }
+    return 0;
+}
+</code></pre>
+<h2 id="pollard_rho"><a class="header" href="#pollard_rho">pollard_rho</a></h2>
+<pre><code class="language-c++">//
+// Created by jiang on 2020/8/15.
+// 徐州ICPC2019 multiply
+
+#include &lt;cstdio&gt;
+#include &lt;ctime&gt;
+#include &lt;algorithm&gt;
+#include &lt;map&gt;
+
+#define TEST_TIMES 8 // 米勒罗宾素性测试次数
+
+std::map&lt;long long, long long&gt; factor_nums;
+
+/**
+ * 快速乘法
+ * @param a
+ * @param b
+ * @param p
+ * @return
+ */
+long long mul(long long a, long long b, long long p) {
+    long long ans = 0;
+    a %= p;
+    while (b) {
+        if (b &amp; 1)ans = (ans + a) % p;
+        b /= 2;
+        a = (a + a) % p;
+    }
+    return ans;
+}
+
+/**
+ * 快速幂取模
+ * @param a
+ * @param b
+ * @param p
+ * @return
+ */
+long long pow(long long a, long long b, long long p) {
+    long long ans = 1;
+    a %= p;
+    while (b) {
+        if (b &amp; 1) ans = mul(a, ans, p);
+        b /= 2;
+        a = mul(a, a, p);
+    }
+    ans %= p;
+    return ans;
+}
+
+/**
+ * 米勒罗宾素性测试
+ * @param n 测试的大数
+ * @param repeat 测试重复次数
+ * @return 大概率是素数：true；不是素数：false
+ */
+bool miller_rabin(long long n, int repeat) {
+    if (n == 2 || n == 3)return true;//特判
+    if (n % 2 == 0 || n == 1)return false;//偶数和1
+
+    //将n-1分解成2^s*d
+    long long d = n - 1;
+    int s = 0;
+    while (!(d &amp; 1)) ++s, d &gt;&gt;= 1;
+    //srand((unsigned)time(NULL));在最开始调用即可
+    for (int i = 0; i &lt; repeat; i++)//重复repeat次
+    {
+        long long a = rand() % (n - 3) + 2;//取一个随机数,[2,n-1)
+        long long x = pow(a, d, n);
+        long long y = 0;
+        for (int j = 0; j &lt; s; j++) {
+            y = mul(x, x, n);
+            if (y == 1 &amp;&amp; x != 1 &amp;&amp; x != (n - 1))return false;
+            x = y;
+        }
+        if (y != 1)return false; //费马小定理
+    }
+    return true;
+}
+
+long long gcd(long long a, long long b) {
+    return b == 0 ? a : gcd(b, a % b);
+}
+
+/**
+ * 找到n的一个因子
+ * @param n
+ * @param c
+ * @return
+ */
+long long pollard_rho(long long n, long long c) {
+    long long x = rand() % (n - 2) + 1;
+    long long y = x, i = 1, k = 2;
+    for (;;) {
+        i++;
+        x = (mul(x, x, n) + c) + n;//不断调整x2
+        long long d = gcd(y - x, n);
+        if (1 &lt; d &amp;&amp; d &lt; n)
+            return d;//找到因子
+        if (y == x)
+            return n;//找到循环，返回n，重新来
+        if (i == k) { //一个优化
+            y = x;
+            k &lt;&lt;= 1;
+        }
+    }
+}
+
+void find_factor(long long n, long long c) {
+    if (n == 1)return;//递归出口
+
+    if (miller_rabin(n, TEST_TIMES)) { //如果是素数，就加入
+        factor_nums[n]++;
+        return;
+    }
+
+    long long p = n;
+    while (p &gt;= n)
+        p = pollard_rho(p, c--);//不断找因子，知道找到为止，返回n说明没找到
+
+    find_factor(p, c);
+    find_factor(n / p, c);
+}
+
+long long arr[100005];
+
+/**
+ * 计算 n!中质因子 x 的数量
+ * @param n
+ * @param x
+ * @return
+ */
+long long calc(long long n, long long x) {
+    long long num = 0;
+    while (n) {
+        num += n / x;
+        n = n / x;
+    }
+    return num;
+}
+
+void solve(int n, long long x, long long y) {
+    factor_nums.clear();
+    // c好像也能取2307
+    find_factor(x, rand() % (n - 1) + 1);
+    long long ans = 1LL &lt;&lt; 61;
+    for (auto &amp;i : factor_nums) {
+        long long z_factor_nums = 0;
+        for (int j = 0; j &lt; n; ++j) {
+            z_factor_nums += calc(arr[j], i.first);
+        }
+        long long y_factor_nums = calc(y, i.first);
+        ans = std::min(ans, (y_factor_nums - z_factor_nums) / i.second);
+    }
+    printf("%lld\n", ans);
+}
+
+int main() {
+    int t;
+    scanf("%d", &amp;t);
+    while (t--) {
+        int n;
+        long long x, y;
+        scanf("%d %lld %lld", &amp;n, &amp;x, &amp;y);
+        for (int i = 0; i &lt; n; ++i) {
+            scanf("%lld", arr + i);
+        }
+        solve(n, x, y);
+    }
+    return 0;
+}
+</code></pre>
+<h1 id="数学题练习"><a class="header" href="#数学题练习">数学题练习</a></h1>
+<h2 id="银川区域赛f"><a class="header" href="#银川区域赛f">银川区域赛F</a></h2>
+<p>数学题分界通常到$$\sqrt{n}$$，特别是看到$$n = 10^{12}$$</p>
+<pre><code class="language-c++">#include &lt;cstdio&gt;
+#include &lt;algorithm&gt;
+
+const long long MOD = 998244353LL;
+
+long long calc(long long a, long long n) {
+    long long ans = 0;
+    for (long long b = a, t = 1; b &lt;= n; b *= a, ++t) {
+        ans = (ans + t * (std::min(b * a, n + 1) - b) % MOD) % MOD;
+    }
+    return ans;
+}
+
+inline long long s1(long long n) {
+    n %= MOD;
+    return n * (n + 1) / 2 % MOD;
+}
+
+inline long long s2(long long n) {
+    n %= MOD;
+    // 6的逆元
+    return (n % MOD * (n + 1) % MOD * (2 * n + 1) % MOD * 166374059) % MOD;
+}
+
+int main() {
+    long long n;
+    scanf("%lld", &amp;n);
+    long long ans = 0, a;
+    for (a = 2; a * a &lt; n; ++a) {
+        ans = (ans + a * calc(a, n) % MOD) % MOD;
+    }
+    ans = (ans + (n + 1) % MOD * (s1(n) - s1(a - 1) + MOD) % MOD - (s2(n) - s2(a - 1) + MOD) % MOD + MOD) % MOD;
+
+    printf("%lld\n", (ans + MOD) % MOD);
+    return 0;
+}
+</code></pre>
+<h1 id="图论练习"><a class="header" href="#图论练习">图论练习</a></h1>
+<h2 id="拓扑排序"><a class="header" href="#拓扑排序">拓扑排序</a></h2>
+<h3 id="poj1094"><a class="header" href="#poj1094">POJ1094</a></h3>
+<pre><code class="language-c++">#include &lt;cstdio&gt;
+#include &lt;queue&gt;
+#include &lt;cstring&gt;
+#include &lt;vector&gt;
+
+const int MAX_VERTEX_NUM = 26;
+static int in_deg[MAX_VERTEX_NUM];
+static bool graph[MAX_VERTEX_NUM][MAX_VERTEX_NUM];
+
+const int NOT_SORTED = 2;
+const int HAS_CIRCLE = 0;
+const int SORTED = 1;
+
+/**
+ * 拓扑排序判断一组字符的顺序。维护in_deg数组，记录每个点的入度。
+ * 将所有入度为0的点入队，出队时更新以该点为前驱的入度，若有新的点入度为0，则入队。
+ * 有环：队列为空后，仍然有点未加入结果向量。
+ * 不能确定排序：过程中队列长度大于1
+ * 全序：结果向量长度 = 图中点的数量
+ */
+int topo_sort(int n, std::vector&lt;int&gt; &amp;result) {
+    std::queue&lt;int&gt; start_q;
+    int temp_in_deg[MAX_VERTEX_NUM];
+    for (int i = 0; i &lt; n; ++i) {
+        if ((temp_in_deg[i] = in_deg[i]) == 0) start_q.push(i);
+    }
+
+    bool not_sorted = false;
+    while (!start_q.empty()) {
+        if (start_q.size() &gt; 1) not_sorted = true;
+        int start = start_q.front();
+        result.push_back(start);
+        start_q.pop();
+        for (int i = 0; i &lt; n; ++i) {
+            if (graph[start][i])
+                if (--temp_in_deg[i] == 0) start_q.push(i);
+        }
+    }
+
+    if (result.size() &lt; n) return HAS_CIRCLE;
+    return not_sorted ? NOT_SORTED : SORTED;
+}
+
+int main() {
+    int n, m;
+    char rel[4];
+    while (scanf("%d %d", &amp;n, &amp;m) &amp;&amp; n + m) {
+        memset(in_deg, 0, sizeof(in_deg));
+        memset(graph, false, sizeof(graph));
+
+        int res;
+        bool not_end = true;
+        int edge_id = -1;
+        std::vector&lt;int&gt; result;
+        for (int i = 0; i &lt; m; ++i) {
+            scanf("%s", rel);
+            if (not_end &amp;&amp; !graph[rel[0] - 'A'][rel[2] - 'A']) {
+                in_deg[rel[2] - 'A']++;
+                graph[rel[0] - 'A'][rel[2] - 'A'] = true;
+                result.clear();
+                res = topo_sort(n, result);
+                if (res == HAS_CIRCLE || res == SORTED) {
+                    not_end = false;
+                    edge_id = i + 1;
+                }
+            }
+        }
+        if (res == HAS_CIRCLE) {
+            printf("Inconsistency found after %d relations.\n", edge_id);
+        } else if (res == NOT_SORTED) {
+            printf("Sorted sequence cannot be determined.\n");
+        } else {
+            printf("Sorted sequence determined after %d relations: ", edge_id);
+            for (int i = 0; i &lt; result.size(); ++i) {
+                printf("%c", result[i] + 'A');
+            }
+            printf(".\n");
+        }
+    }
+    return 0;
+}
+</code></pre>
+<h2 id="图的bfs"><a class="header" href="#图的bfs">图的BFS</a></h2>
+<h3 id="ccpc2019d-path-求有向图第k短的路径"><a class="header" href="#ccpc2019d-path-求有向图第k短的路径">CCPC2019D Path 求有向图第k短的路径</a></h3>
+<pre><code class="language-c++">#include &lt;cstdio&gt;
+#include &lt;queue&gt;
+#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+#include &lt;cstring&gt;
+
+struct Edge {
+    int v;
+    long long weight;
+
+    bool operator&lt;(const Edge &amp;e) const {
+        return weight &lt; e.weight;
+    }
+};
+
+std::vector&lt;Edge&gt; graph[500009];
+
+struct Path {
+    int u, v, idx;
+    long long total_weight;
+
+    bool operator&gt;(const struct Path &amp;path) const {
+        return total_weight &gt; path.total_weight;
+    }
+};
+
+static int max_query = 0;
+static long long result[500005];
+
+long long solve(int query,  std::priority_queue&lt;Path, std::vector&lt;Path&gt;, std::greater&lt;Path&gt; &gt; &amp;queue) {
+
+    Path p{};
+    while (max_query &lt; query &amp;&amp; !queue.empty()) {
+        p = queue.top();
+        queue.pop();
+        result[++max_query] = p.total_weight;
+        if (0 &lt; p.idx &amp;&amp; p.idx &lt; graph[p.u].size()) {
+            queue.push({p.u,
+                        graph[p.u][p.idx].v,
+                        p.idx + 1,
+                        p.total_weight - graph[p.u][p.idx - 1].weight + graph[p.u][p.idx].weight});
+        }
+        if (!graph[p.v].empty()) {
+            queue.push({p.v, graph[p.v][0].v, 1, p.total_weight + graph[p.v][0].weight});
+        }
+    }
+    return result[query];
+}
+
+int main() {
+    int t;
+    scanf("%d", &amp;t);
+    while (t--) {
+        int n, m, q;
+        scanf("%d %d %d", &amp;n, &amp;m, &amp;q);
+
+        max_query = 0;
+        memset(result, 0, sizeof(result));
+        std::priority_queue&lt;Path, std::vector&lt;Path&gt;, std::greater&lt;Path&gt; &gt; queue;
+        for (int i = 1; i &lt;= n; ++i) graph[i].clear();
+
+        int u, v;
+        long long w;
+        for (int i = 0; i &lt; m; ++i) {
+            scanf("%d %d %lld", &amp;u, &amp;v, &amp;w);
+            graph[u].push_back({v, w});
+            queue.push({u, v, -1, w});
+        }
+        for (int i = 1; i &lt;= n; ++i) std::sort(graph[i].begin(), graph[i].end());
+
+        int query;
+        for (int i = 0; i &lt; q; ++i) {
+            scanf("%d", &amp;query);
+            printf("%lld\n", solve(query, queue));
+        }
+    }
+    return 0;
+}
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="字符串.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="字符串.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>
