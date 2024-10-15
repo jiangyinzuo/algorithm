@@ -1,0 +1,1363 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>数论 - Algorithms</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    </head>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('light')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="编程语言.html"><strong aria-hidden="true">1.</strong> 编程语言</a></li><li class="chapter-item expanded "><a href="算法基础.html"><strong aria-hidden="true">2.</strong> 算法基础</a></li><li class="chapter-item expanded "><a href="动态规划.html"><strong aria-hidden="true">3.</strong> 动态规划</a></li><li class="chapter-item expanded "><a href="计算几何.html"><strong aria-hidden="true">4.</strong> 计算几何</a></li><li class="chapter-item expanded "><a href="树上问题.html"><strong aria-hidden="true">5.</strong> 树上问题</a></li><li class="chapter-item expanded "><a href="数据结构.html"><strong aria-hidden="true">6.</strong> 数据结构</a></li><li class="chapter-item expanded "><a href="数论.html" class="active"><strong aria-hidden="true">7.</strong> 数论</a></li><li class="chapter-item expanded "><a href="数学.html"><strong aria-hidden="true">8.</strong> 数学</a></li><li class="chapter-item expanded "><a href="随机化算法.html"><strong aria-hidden="true">9.</strong> 随机化算法</a></li><li class="chapter-item expanded "><a href="图论.html"><strong aria-hidden="true">10.</strong> 图论</a></li><li class="chapter-item expanded "><a href="字符串.html"><strong aria-hidden="true">11.</strong> 字符串</a></li><li class="chapter-item expanded "><a href="练习.html"><strong aria-hidden="true">12.</strong> 练习</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Algorithms</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="数论"><a class="header" href="#数论">数论</a></h1>
+<ul>
+<li><a href="#%E5%BE%AA%E7%8E%AF%E5%B0%8F%E6%95%B0%E5%8C%96%E6%9C%80%E7%AE%80%E5%88%86%E6%95%B0">循环小数化最简分数</a></li>
+<li><a href="#gcdlcm">GCD、LCM</a>
+<ul>
+<li><a href="#%E8%BE%97%E8%BD%AC%E7%9B%B8%E5%87%8F%E6%B1%82gcd">辗转相减求gcd</a></li>
+<li><a href="#gcd%E6%8E%A8%E5%AF%BC">gcd推导</a></li>
+<li><a href="#nm%E7%9A%84gcd%E7%9F%A9%E9%98%B5%E6%89%93%E8%A1%A8">N*M的GCD矩阵打表</a></li>
+</ul>
+</li>
+<li><a href="#%E6%89%A9%E5%B1%95%E6%AC%A7%E5%87%A0%E9%87%8C%E5%BE%97">扩展欧几里得</a>
+<ul>
+<li><a href="#%E6%89%A9%E5%B1%95%E6%AC%A7%E5%87%A0%E9%87%8C%E5%BE%97%E8%A7%A3%E7%BA%BF%E6%80%A7%E5%90%8C%E4%BD%99%E6%96%B9%E7%A8%8B">扩展欧几里得解线性同余方程</a></li>
+</ul>
+</li>
+<li><a href="#%E8%B4%B9%E9%A9%AC%E5%B0%8F%E5%AE%9A%E7%90%86">费马小定理</a></li>
+<li><a href="#%E4%B9%98%E6%B3%95%E9%80%86%E5%85%83">乘法逆元</a>
+<ul>
+<li><a href="#%E6%B1%821%E5%88%B0n%E6%AF%8F%E4%B8%AA%E6%95%B0mod-p%E7%9A%84%E4%B9%98%E6%B3%95%E9%80%86%E5%85%83">求1到n每个数mod p的乘法逆元</a></li>
+<li><a href="#%E6%B1%82%E9%98%B6%E4%B9%98%E7%9A%84%E4%B9%98%E6%B3%95%E9%80%86%E5%85%83">求阶乘的乘法逆元</a></li>
+<li><a href="#%E7%BA%BF%E6%80%A7%E6%B1%82n%E4%B8%AA%E6%95%B0%E7%9A%84%E9%80%86%E5%85%83">线性求N个数的逆元</a></li>
+<li><a href="#%E9%80%9A%E8%BF%87%E4%B9%98%E6%B3%95%E9%80%86%E5%85%83%E7%AE%97%E9%99%A4%E6%B3%95%E5%8F%96%E6%A8%A1">通过乘法逆元算除法取模</a></li>
+</ul>
+</li>
+<li><a href="#%E6%A8%A1%E8%BF%90%E7%AE%97">模运算</a>
+<ul>
+<li><a href="#%E5%9F%BA%E6%9C%AC%E6%80%A7%E8%B4%A8">基本性质</a></li>
+<li><a href="#%E8%BF%90%E7%AE%97%E8%A7%84%E5%88%99">运算规则</a></li>
+<li><a href="#%E9%87%8D%E8%A6%81%E5%AE%9A%E7%90%86">重要定理</a></li>
+</ul>
+</li>
+<li><a href="#%E5%9B%A0%E6%95%B0">因数</a>
+<ul>
+<li><a href="#%E5%9B%A0%E6%95%B0%E4%B8%AA%E6%95%B0%E5%AE%9A%E7%90%86">因数个数定理</a></li>
+<li><a href="#%E7%AD%9B%E6%B3%95%E6%B1%82%E5%9B%A0%E6%95%B0%E5%92%8C">筛法求因数和</a></li>
+<li><a href="#%E6%9C%80%E5%B0%8F%E8%B4%A8%E5%9B%A0%E6%95%B0%E6%89%93%E8%A1%A8">最小质因数打表</a></li>
+<li><a href="#%E8%B4%A8%E5%9B%A0%E6%95%B0%E5%88%86%E8%A7%A3%E5%B9%B6%E7%BB%9F%E8%AE%A1%E4%B8%AA%E6%95%B0">质因数分解并统计个数</a></li>
+<li><a href="#pollard_rho-%E5%88%86%E8%A7%A3%E5%A4%A7%E8%B4%A8%E5%9B%A0%E6%95%B0">pollard_rho 分解大质因数</a></li>
+<li><a href="#%E7%BB%9F%E8%AE%A1n%E7%9A%84%E9%98%B6%E4%B9%98%E4%B8%AD%E8%B4%A8%E5%9B%A0%E5%AD%90x%E7%9A%84%E6%95%B0%E9%87%8F">统计n的阶乘中质因子x的数量</a></li>
+</ul>
+</li>
+<li><a href="#%E5%88%86%E6%95%B0">分数</a>
+<ul>
+<li><a href="#%E5%BE%AA%E7%8E%AF%E5%B0%8F%E6%95%B0%E8%BD%AC%E5%88%86%E6%95%B0">循环小数转分数</a></li>
+</ul>
+</li>
+<li><a href="#%E7%B4%A0%E6%95%B0">素数</a>
+<ul>
+<li><a href="#%E7%B4%A0%E6%95%B0%E8%AE%A1%E6%95%B0%E5%87%BD%E6%95%B0">素数计数函数</a></li>
+<li><a href="#%E5%88%A4%E6%96%AD%E4%B8%80%E4%B8%AA%E6%95%B0%E6%98%AF%E5%90%A6%E4%B8%BA%E7%B4%A0%E6%95%B0">判断一个数是否为素数</a>
+<ul>
+<li><a href="#%E5%8D%A1%E8%BF%88%E5%85%8B%E5%B0%94%E6%95%B0">卡迈克尔数</a></li>
+<li><a href="#%E7%B4%A0%E6%95%B0%E7%AD%9B">素数筛</a></li>
+</ul>
+</li>
+<li><a href="#%E6%A2%85%E6%A3%AE%E7%B4%A0%E6%95%B0">梅森素数</a></li>
+</ul>
+</li>
+<li><a href="#%E5%8D%A2%E5%8D%A1%E6%96%AF%E5%AE%9A%E7%90%86">卢卡斯定理</a></li>
+<li><a href="#%E6%AC%A7%E6%8B%89%E5%87%BD%E6%95%B0%E4%B8%8E%E6%AC%A7%E6%8B%89%E5%AE%9A%E7%90%86">欧拉函数与欧拉定理</a>
+<ul>
+<li><a href="#%E6%B1%82%E6%AC%A7%E6%8B%89%E5%87%BD%E6%95%B0">求欧拉函数</a></li>
+<li><a href="#%E7%AD%9B%E6%AC%A7%E6%8B%89%E5%87%BD%E6%95%B0">筛欧拉函数</a></li>
+</ul>
+</li>
+<li><a href="#%E8%8E%AB%E6%AF%94%E4%B9%8C%E6%96%AF%E5%8F%8D%E6%BC%94">莫比乌斯反演</a>
+<ul>
+<li><a href="#%E5%BC%95%E7%90%86">引理</a></li>
+<li><a href="#%E6%95%B4%E9%99%A4%E5%88%86%E5%9D%97">整除分块</a>
+<ul>
+<li><a href="#%E5%BF%AB%E9%80%9F%E7%AE%97sum_i1n-lfloor-fracni-rfloor">快速算$$\sum_{i=1}^n \lfloor \frac{n}i \rfloor$$</a></li>
+</ul>
+</li>
+<li><a href="#%E8%8E%AB%E6%AF%94%E4%B9%8C%E6%96%AF%E5%87%BD%E6%95%B0">莫比乌斯函数</a>
+<ul>
+<li><a href="#%E7%BA%BF%E6%80%A7%E7%AD%9B%E8%8E%AB%E6%AF%94%E4%B9%8C%E6%96%AF%E5%87%BD%E6%95%B0">线性筛莫比乌斯函数</a></li>
+<li><a href="#%E8%8E%AB%E6%AF%94%E4%B9%8C%E6%96%AF%E5%8F%8D%E6%BC%94-1">莫比乌斯反演</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#min_25%E7%AD%9B">Min_25筛</a></li>
+</ul>
+<h2 id="循环小数化最简分数"><a class="header" href="#循环小数化最简分数">循环小数化最简分数</a></h2>
+<p>日本野口哲典在《天哪！数学原来可以这样学》中介绍了如何将循环小数转化成分数的方法，现介绍如下：</p>
+<p>1.循环小数0.7272……循环节为7，2两位，因此化为分数为72/99=1/8.即有几位循环数字就除以几个9。又如0.123123……循环节为1，2，3三位，因此化为分数为123/999=41/333.</p>
+<p>这种方法只适用于从小数点后第一位就开始循环的小数，如果不是从第一位就开始循环的小数，必须用下面的方法。</p>
+<p>2.循环小数0.41666……先把0.41666……乘以100得41.666……，可以理解为41+0.666……，所以写成分数为41+6/9=41+2/3=125/3.因为开始乘以了100，所以再除以100，即125/3÷100=125/300=5/12.</p>
+<p>https://www.lanqiao.cn/problems/1051/learning/</p>
+<pre><code class="language-python">from math import gcd
+
+
+x, y = map(int, input().split())
+s = input()
+n = int(s)
+
+if x == 1:
+  a = 10 ** len(s) - 1
+  f = gcd(n, a)
+  print(n//f, a//f)
+else:
+  m = int(s[x-1:y])
+  a = 10 ** (y-x+1) - 1
+  m += a * int(s[:x-1])
+  f = gcd(m, a)
+  m //= f
+  a = a // f * (10 ** len(s[:x-1]))
+  f = gcd(m, a)
+  print(m//f, a//f)
+</code></pre>
+<h2 id="gcdlcm"><a class="header" href="#gcdlcm">GCD、LCM</a></h2>
+<p>欧几里得算法求gcd</p>
+<p>$$gcd(a, b) = gcd(b, a \bmod b)$$</p>
+<pre><code class="language-c">int gcd(int a, int b) {
+	return b == 0 ? a : gcd(b, a % b);
+}
+</code></pre>
+<p>$$gcd(a, b) × lcm(a, b) = a × b$$</p>
+<p>一次求多个数的gcd：$$gcd(a_1, a_2, a_3, a_4) = gcd(gcd(gcd(a_1, a_2), a_3), a_4)$$</p>
+<p>一次求多个数的lcm：$$lcm(a_1, a_2, a_3, a_4) = lcm(lcm(lcm(a_1, a_2), a_3), a_4)$$</p>
+<h3 id="辗转相减求gcd"><a class="header" href="#辗转相减求gcd">辗转相减求gcd</a></h3>
+<p>$$\gcd(35, 14) = \gcd(21, 14) = \gcd(14, 7) = \gcd(7, 7) = \gcd(7, 0) = 7$$</p>
+<h3 id="gcd推导"><a class="header" href="#gcd推导">gcd推导</a></h3>
+<p>$$\gcd(a,b) = 1, \space \gcd(a, c) = 1 \iff gcd(a, bc) = 1$$</p>
+<p>$$\gcd(a, b) = 1 \iff \gcd(a^m, b^k) = 1$$</p>
+<p>辗转相减求gcd：$$\gcd(a, b) = \gcd(a, a + b)$$</p>
+<h3 id="nm的gcd矩阵打表"><a class="header" href="#nm的gcd矩阵打表">N*M的GCD矩阵打表</a></h3>
+<p>$$gcd[i][j] = \gcd(i, j)$$</p>
+<pre><code class="language-c++">int gcd[1001][1001] = {0};
+
+void get_gcd(int n, int m) {
+    for (int i = 1; i &lt;= 1000; ++i) {
+        for (int j = 1; j &lt;= 1000; ++j) {
+            if (!gcd[i][j]) {
+                for (int k = 1; k * i &lt;= n &amp;&amp; k * j &lt;= m; ++k) {
+                    gcd[k * i][k * j] = k;
+                }
+            }
+        }
+    }
+}
+</code></pre>
+<h2 id="扩展欧几里得"><a class="header" href="#扩展欧几里得">扩展欧几里得</a></h2>
+<p>裴蜀定理，又称贝祖定理（Bézout's lemma）</p>
+<p>设$$a,b$$ 是不全为零的整数，则存在整数$$x,y$$ , 使得$$ax+by=\gcd(a,b)$$ .</p>
+<pre><code class="language-c++">/**
+ * 扩展欧几里得算法
+ * ax + by = gcd(a, b)
+ * x、y是方程的一组整数解
+ * @return gcd(a,b)
+ */
+int ex_gcd(int a, int b, int &amp;x, int &amp;y) {
+    if (!b) {
+        x = 1;
+        y = 0;
+        return a;
+    }
+    int gcd = ex_gcd(b, a % b, x, y);
+    int temp = x;
+    x = y;
+    y = temp - (a / b) * y;
+    return gcd;
+}
+</code></pre>
+<p>通过ex_gcd得到$$ax+by=\gcd(a, b)$$的一组可行整数解$$x_0, y_0$$后：</p>
+<ul>
+<li>$$ax+by=\gcd(a, b)$$的通解为</li>
+</ul>
+<p>$$
+x = x_0 + \frac{b}{\gcd(a, b)}t, y=y_0 - \frac{a}{\gcd(a,b)}t,t\in\mathbb{Z}，两个式子中的t相同
+$$</p>
+<ul>
+<li>
+<p>求$$ax+by=c$$的解</p>
+<p>若$$c \bmod \gcd(a,b) =0$$，则方程存在整数解，否则不存在整数解。</p>
+<p>一组整数解：$$x_1 = x_0\frac{c}{\gcd(a,b)}, y_1=y_0\frac{c}{\gcd(a,b)}$$</p>
+<p>通解
+$$
+x = x_1 + \frac{b}{\gcd(a, b)}t, y=y_1 - \frac{a}{\gcd(a,b)}t,t\in\mathbb{Z}，两个式子中的t相同
+$$</p>
+</li>
+</ul>
+<h3 id="扩展欧几里得解线性同余方程"><a class="header" href="#扩展欧几里得解线性同余方程">扩展欧几里得解线性同余方程</a></h3>
+<p>形如$$ax \equiv c \pmod b$$ 的方程被称为 <strong>线性同余方程</strong> (Congruence Equation)。</p>
+<p><strong>定理 1</strong> ：方程$$ax+by=c$$ 与方程$$ax \equiv c \pmod b$$  是等价的，有整数解的充要条件为$$\gcd(a,b) | c$$   <strong>(贝组定理)</strong>。</p>
+<p>根据定理 1，方程 $$ax+by=c$$，我们可以先用扩展欧几里得算法求出一组$$x_0,y_0$$ ，也就是 $$ax+by=\gcd(a,b)$$ ，然后两边同时除以$$\gcd(a,b)$$ ，再乘 $$c$$。然后就得到了方程$$\frac{acx_0}{\gcd(a,b)}+\frac{bcy_0}{\gcd(a,b)}=c$$ ，然后我们就找到了方程的一个解。</p>
+<p><strong>定理 2</strong> ：若$$\gcd(a,b)=1$$ ，且 $$x_0,y_0$$ 为方程 的一组解，则该方程的任意解可表示为$$x = x_0 + bt \space , y = y_0 - at$$： , 且对任意整数 $$t$$都成立。</p>
+<p>根据定理 2，可以求出方程的所有解。但在实际问题中，我们往往被要求求出一个最小整数解，也就是一个特解 $$x, t = \frac{b}{\gcd(a,b)}, x=(x \bmod t + t) \bmod t$$。</p>
+<pre><code class="language-c++">int ex_gcd(int a, int b, int&amp; x, int&amp; y) {
+  if (b == 0) {
+    x = 1;
+    y = 0;
+    return a;
+  }
+  int d = ex_gcd(b, a % b, x, y);
+  int temp = x;
+  x = y;
+  y = temp - a / b * y;
+  return d;
+}
+bool liEu(int a, int b, int c, int&amp; x, int&amp; y) {
+  int d = ex_gcd(a, b, x, y);
+  if (c % d != 0) return 0;
+  int k = c / d;
+  x *= k;
+  y *= k;
+  return 1;
+}
+</code></pre>
+<h2 id="费马小定理"><a class="header" href="#费马小定理">费马小定理</a></h2>
+<p>若p为质数，a为任意自然数，则$$a^p \equiv a \pmod p$$</p>
+<p>若p为质数，$$\gcd(a,p) = 1, 则a^{p-1} \equiv 1 \pmod p$$</p>
+<h2 id="乘法逆元"><a class="header" href="#乘法逆元">乘法逆元</a></h2>
+<p>若线性同余方程$ax\equiv1\pmod b$，则称x为$a\bmod b$ 的逆元，记作$a^{-1}$</p>
+<p>快速幂+费马小定理求逆元：b为素数时，逆元$x=a^{b-2}$</p>
+<p>$\frac a b$为分数，求$a<em>b^{-1} \bmod p$
+$$
+a</em>b^{-1} \equiv a * b^{p-2}\pmod p
+$$</p>
+<p>扩展欧几里得求乘法逆元</p>
+<pre><code class="language-c++">void exgcd(int a, int b, int &amp;x, int &amp;y) {
+  if (b == 0) {
+	x = 1, y = 0;
+	return;
+  }
+  exgcd(b, a % b, y, x);
+  y -= a / b * x;
+}
+
+//求逆元
+int gao(int a, int p) {
+  int x, y;
+  exgcd(a, p, x, y);
+  return (x % p + p) % p;
+}
+
+</code></pre>
+<h3 id="求1到n每个数mod-p的乘法逆元"><a class="header" href="#求1到n每个数mod-p的乘法逆元">求1到n每个数mod p的乘法逆元</a></h3>
+<p>luogu3811</p>
+<pre><code class="language-c">#include &lt;stdio.h&gt;
+
+long long inv[3000008];
+void calc_inv(int n, int p) {
+    inv[1] = 1;
+	for (int i = 2; i &lt;= n; ++i) inv[i] = (long long)(p - p / i) * inv[p % i] % p;
+}
+
+int main() {
+    int n, p;
+    scanf("%d %d", &amp;n, &amp;p);
+	calc_inv(n, p);    
+    for (int i = 1; i &lt;= n; ++i) printf("%lld\n", inv[i]);
+    return 0;
+}
+</code></pre>
+<h3 id="求阶乘的乘法逆元"><a class="header" href="#求阶乘的乘法逆元">求阶乘的乘法逆元</a></h3>
+<pre><code class="language-c++">long long inv[10000000];
+const int mod=1000000007;
+void getinv(long long n)
+{
+	long long inv_max=1;
+	///求阶乘的最大值
+	for(int i=1;i&lt;=n;i++)  inv_max=inv_max*i%mod;
+	///求阶乘最大值的逆元
+	inv[n]=qmod(inv_max,mod-2);
+	for(int i=n-1;i&gt;=1;i--) inv[i]=inv[i+1]*(i+1)%mod;
+}
+
+</code></pre>
+<h3 id="线性求n个数的逆元"><a class="header" href="#线性求n个数的逆元">线性求N个数的逆元</a></h3>
+<img src="./asset/线性求n个数逆元.png" alt="image-20201016202651453" style="zoom:80%;" />
+<pre><code class="language-c++">s[0] = 1;
+for (int i = 1; i &lt;= n; ++i) s[i] = s[i - 1] * a[i] % p;
+sv[n] = qpow(s[n], p - 2); // 当然这里也可以用 exgcd 来求逆元,视个人喜好而定.
+
+for (int i = n; i &gt;= 1; --i) sv[i - 1] = sv[i] * a[i] % p;
+for (int i = 1; i &lt;= n; ++i) inv[i] = sv[i] * s[i - 1] % p;
+</code></pre>
+<h3 id="通过乘法逆元算除法取模"><a class="header" href="#通过乘法逆元算除法取模">通过乘法逆元算除法取模</a></h3>
+<p>由费马小定理求除法取模（m必须是质数）：</p>
+<p>$$\frac{1}{a} = \frac{1}{a} a \cdot a^{m-2} = a^{m-2} \pmod m $$</p>
+<p>因此
+$$
+\frac{a}{b} = \frac{a}{b} \cdot b \cdot b^{m-2} = a \cdot b^{m-2} \pmod m
+$$</p>
+<h2 id="模运算"><a class="header" href="#模运算">模运算</a></h2>
+<h3 id="基本性质"><a class="header" href="#基本性质">基本性质</a></h3>
+<ol>
+<li>若p|(a-b)，则a≡b (% p)。例如 11 ≡ 4 (% 7)， 18 ≡ 4(% 7)</li>
+<li>(a % p)=(b % p)意味a≡b (% p)</li>
+<li>对称性：a≡b (% p)等价于b≡a (% p)</li>
+<li>传递性：若a≡b (% p)且b≡c (% p) ，则a≡c (% p)</li>
+</ol>
+<h3 id="运算规则"><a class="header" href="#运算规则">运算规则</a></h3>
+<p>模运算与基本四则运算有些相似，但是除法例外。其规则如下：</p>
+<ol>
+<li>(a + b) % p = (a % p + b % p) % p （1）</li>
+<li>(a - b) % p = (a % p - b % p ) % p （2）</li>
+<li>(a * b) % p = (a % p * b % p) % p （3）</li>
+<li>a ^ b % p = ((a % p)^b) % p （4）</li>
+</ol>
+<ul>
+<li>结合律：((a+b) % p + c) % p = (a + (b+c) % p) % p （5）</li>
+</ul>
+<p>((a<em>b) % p * c)% p = (a * (b</em>c) % p) % p （6）</p>
+<ul>
+<li>交换律：(a + b) % p = (b+a) % p （7）</li>
+</ul>
+<p>(a * b) % p = (b * a) % p （8）</p>
+<ul>
+<li>分配律：(a+b) % p = ( a % p + b % p ) %p（9）</li>
+<li>((a +b)% p * c) % p = ((a * c) % p + (b * c) % p) % p （10）</li>
+</ul>
+<h3 id="重要定理"><a class="header" href="#重要定理">重要定理</a></h3>
+<ul>
+<li>若a≡b (% p)，则对于任意的c，都有(a + c)/ ≡ (b + c) (%p)；（11）</li>
+<li>若a≡b (% p)，则对于任意的c，都有(a * c) ≡ (b * c) (%p)；（12）</li>
+<li>若a≡b (% p)，c≡d (% p)，则 (a + c) ≡ (b + d) (%p)，(a - c) ≡ (b - d) (%p)，(a * c) ≡ (b * d) (%p)； （13）</li>
+</ul>
+<p>交换律</p>
+<p>$$a + b \equiv b+a \pmod k$$</p>
+<p>$$a×b \equiv b × a \pmod k$$</p>
+<p>结合律</p>
+<p>$$(a +_k b) +_k c \equiv a +_k (b +_k c)$$</p>
+<p>$$(a ×_k b) ×_k c \equiv a ×_k (b ×_k c)$$</p>
+<p>分配律</p>
+<p>$$(a +_k b) ×_k c \equiv a ×_k c +_k b ×_k c$$</p>
+<p>$$a +_k b = a \bmod k +_k b \bmod k$$</p>
+<p>$$a ×_k b = a \bmod k ×_k b \bmod k$$</p>
+<p>$$a_1 + a_2 + ... + a_n \equiv a_1 \bmod k + a_2 \bmod k + ... + a_n \bmod k \pmod k$$</p>
+<p>$$a_1 × a_2 × ... × a_n \equiv a_1 \bmod k × a_2 \bmod k × ... × a_n \bmod k \pmod k$$</p>
+<p>$$-a \bmod k = -(a \bmod k) = k - (a \bmod k)$$</p>
+<p>$$a^b \equiv (a \bmod k)^b \pmod k$$</p>
+<p>$$若 d = gcd(a_1, a_2, ..., a_n)，a_1x_1 + a_2x_2 + ... + a_nx_n = l, 则 \frac{a_1}{d}x_1 + \frac{a_2}{d}x_2 + ... + \frac{a_n}{d}x_n = l$$</p>
+<p>$$(x \bmod (ab)) \bmod a = (x \bmod a) \bmod (ab) = x \bmod a$$</p>
+<p><strong>CF1359E</strong> 若对任意1-k的排列$$p_1, p_2, ...,p_k$$均满足</p>
+<p>$$(((x\bmod a_1)\bmod a_2)…\mod a_{k−1})\bmod a_k=(((x \bmod a_{p_1}) \bmod a_{p_2})… \bmod a_{p_{k−1}}) \bmod a_{p_k}$$</p>
+<p>$$1≤a_1&lt;a_2&lt;⋯&lt;a_k≤n$$ 则$$a_1, a_2, ..., a_k$$这k个数都是$$a_1$$的倍数</p>
+<h2 id="因数"><a class="header" href="#因数">因数</a></h2>
+<h3 id="因数个数定理"><a class="header" href="#因数个数定理">因数个数定理</a></h3>
+<p>对于一个大于1正整数n可以分解质因数：</p>
+<p>$$n = \prod \limits_{i=1}^k p_i^{a_i}$$</p>
+<p>则n的正约数的个数就是$$f(n) = \prod \limits_{i=1}^k (a_i+1)$$</p>
+<p><img src="./asset/%E5%9B%A0%E6%95%B0%E4%B8%AA%E6%95%B0%E5%AE%9A%E7%90%86.png" alt="" /></p>
+<pre><code class="language-c++">void pre() {
+  d[1] = 1;
+  for (int i = 2; i &lt;= n; ++i) {
+    if (!v[i]) v[i] = 1, p[++tot] = i, d[i] = 2, num[i] = 1;
+    for (int j = 1; j &lt;= tot &amp;&amp; i &lt;= n / p[j]; ++j) {
+      v[p[j] * i] = 1;
+      if (i % p[j] == 0) {
+        num[i * p[j]] = num[i] + 1;
+        d[i * p[j]] = d[i] / num[i * p[j]] * (num[i * p[j]] + 1);
+        break;
+      } else {
+        num[i * p[j]] = 1;
+        d[i * p[j]] = d[i] * 2;
+      }
+    }
+  }
+}
+</code></pre>
+<h3 id="筛法求因数和"><a class="header" href="#筛法求因数和">筛法求因数和</a></h3>
+<p>f[i]表示i的约数和，g[i]表示i的最小质因子的$$p + p^1 + p^2 + ... + p^k$$</p>
+<pre><code class="language-c++">void pre() {
+  g[1] = f[1] = 1;
+  for (int i = 2; i &lt;= n; ++i) {
+    if (!v[i]) v[i] = 1, p[++tot] = i, g[i] = i + 1, f[i] = i + 1;
+    for (int j = 1; j &lt;= tot &amp;&amp; i &lt;= n / p[j]; ++j) {
+      v[p[j] * i] = 1;
+      if (i % p[j] == 0) {
+        g[i * p[j]] = g[i] * p[j] + 1;
+        f[i * p[j]] = f[i] / g[i] * g[i * p[j]];
+        break;
+      } else {
+        f[i * p[j]] = f[i] * f[p[j]];
+        g[i * p[j]] = 1 + p[j];
+      }
+    }
+  }
+  for (int i = 1; i &lt;= n; ++i) f[i] = (f[i - 1] + f[i]) % Mod;
+}
+</code></pre>
+<h3 id="最小质因数打表"><a class="header" href="#最小质因数打表">最小质因数打表</a></h3>
+<pre><code class="language-c++">int min_prime[10000007] = {0};
+
+/**
+ * 若i为质数，则min_prime[i] = 0
+ * 否则mim_prime[i] = 最小质因数
+ */
+void get_min_prime_factor() {
+    // 最小质因数i*i &lt; 10000000
+    for (int i = 2; i &lt;= 3163; ++i) {
+        if (min_prime[i] == 0) {
+            for (int j = i * 2; j &lt;= 10000000; j += i) {
+                if (min_prime[j] == 0)
+                    min_prime[j] = i;
+            }
+        }
+    }
+}
+</code></pre>
+<h3 id="质因数分解并统计个数"><a class="header" href="#质因数分解并统计个数">质因数分解并统计个数</a></h3>
+<pre><code class="language-c++">std::unordered_map&lt;long long, long long&gt; factor_nums;
+for (long long i = 2; i * i &lt;= x; ++i) {
+    while (x % i == 0) {
+        ++factor_nums[i];
+        x /= i;
+    }
+}
+if (x &gt; 1) ++factor_nums[x];
+</code></pre>
+<p>如果有多个数要分解（如多组输入），则需要提前筛出素数。(见数论练习)</p>
+<pre><code class="language-c++">//
+// Created by jiang on 2020/12/2.
+// cf1454D：把一个数n分解为若干个数的乘积a1*a2*...ak，使得 a_i &gt;= 1且 a_{i+1} 能被a_i整除
+// 且k尽可能多
+// 先质因数分解，记最多的质因数p有m个。则数列p, p, p, ... (n/p^(m-1)) 即为所求
+
+#include &lt;cstdio&gt;
+#include &lt;vector&gt;
+#include &lt;unordered_map&gt;
+
+constexpr int MAX_N = 100005;
+std::vector&lt;long long&gt; primes;
+bool not_prime[MAX_N] = {false};
+
+void euler_thieve() {
+    for (int i = 2; i &lt; MAX_N; i++) {
+        if (!not_prime[i]) {
+            primes.push_back(i);
+        }
+        for (int j = 0; j &lt; primes.size() &amp;&amp; i * primes[j] &lt; MAX_N; ++j) {
+            not_prime[i * primes[j]] = true;
+            if (i % primes[j] == 0) {
+                break;
+            }
+        }
+    }
+}
+
+auto get_num_factors(long long n) {
+    std::unordered_map&lt;long long, long long&gt; num_factors;
+    for (auto &amp;prime : primes) {
+        if (prime * prime &gt; n) break;
+        if (n % prime == 0) {
+            do {
+                n /= prime;
+                ++num_factors[prime];
+            } while (n % prime == 0);
+        }
+    }
+    if (n &gt; 1) ++num_factors[n];
+    return num_factors;
+}
+
+int main() {
+    euler_thieve();
+    int t;
+    scanf("%d", &amp;t);
+
+    while (t--) {
+        long long n;
+        scanf("%lld", &amp;n);
+        auto num_factors = get_num_factors(n);
+        long long max_k, max_nums = 0;
+        for (auto &amp;kv : num_factors) {
+            if (kv.second &gt; max_nums) {
+                max_nums = kv.second;
+                max_k = kv.first;
+            }
+        }
+        long long divisor = 1;
+        printf("%lld\n", max_nums);
+        for (int i = 0; i &lt; max_nums - 1; ++i) {
+            printf("%lld ", max_k);
+            divisor *= max_k;
+        }
+        printf("%lld\n", n / divisor);
+    }
+    return 0;
+}
+</code></pre>
+<pre><code class="language-c++">bool is_prime[100006];
+std::vector&lt;int&gt; primes;
+
+void sieve(int n) {
+    memset(is_prime, true, sizeof(is_prime));
+    for (int i = 2; i &lt;= n; ++i) {
+        if (is_prime[i]) {
+            primes.push_back(i);
+            for (int j = i + i; j &lt;= n; j += i) {
+                is_prime[j] = false;
+            }
+        }
+    }
+}
+
+std::unordered_map&lt;int, int&gt; factor_nums;
+void factor(int x) {
+    // c++11能用for-range循环
+    for (int i = 0; i &lt; primes.size() &amp;&amp; primes[i] * primes[i] &lt;= x; ++i) {
+        while (x % primes[i] == 0) {
+            ++factor_nums[primes[i]];
+            x /= primes[i];
+        }
+    }
+    if (x &gt; 1) ++factor_nums[x];
+}
+</code></pre>
+<h3 id="pollard_rho-分解大质因数"><a class="header" href="#pollard_rho-分解大质因数">pollard_rho 分解大质因数</a></h3>
+<pre><code class="language-c++">//
+// Created by jiang on 2020/8/15.
+//
+
+#include &lt;iostream&gt;
+#include &lt;ctime&gt;
+#include &lt;algorithm&gt;
+#include &lt;map&gt;
+
+#define TEST_TIMES 8 // 米勒罗宾素性测试次数
+
+std::map&lt;long long, int&gt; factor_nums;
+
+/**
+ * 快速乘法
+ * @param a
+ * @param b
+ * @param p
+ * @return
+ */
+long long mul(long long a, long long b, long long p) {
+    long long ans = 0;
+    a %= p;
+    while (b) {
+        if (b &amp; 1)ans = (ans + a) % p;
+        b /= 2;
+        a = (a + a) % p;
+    }
+    return ans;
+}
+
+/**
+ * 快速幂取模
+ * @param a
+ * @param b
+ * @param p
+ * @return
+ */
+long long pow(long long a, long long b, long long p) {
+    long long ans = 1;
+    a %= p;
+    while (b) {
+        if (b &amp; 1) ans = mul(a, ans, p);
+        b /= 2;
+        a = mul(a, a, p);
+    }
+    ans %= p;
+    return ans;
+}
+
+/**
+ * 米勒罗宾素性测试
+ * @param n 测试的大数
+ * @param repeat 测试重复次数
+ * @return 大概率是素数：true；不是素数：false
+ */
+bool miller_rabin(long long n, int repeat) {
+    if (n == 2 || n == 3)return true;//特判
+    if (n % 2 == 0 || n == 1)return false;//偶数和1
+
+    //将n-1分解成2^s*d
+    long long d = n - 1;
+    int s = 0;
+    while (!(d &amp; 1)) ++s, d &gt;&gt;= 1;
+    //srand((unsigned)time(NUlong long));在最开始调用即可
+    for (int i = 0; i &lt; repeat; i++)//重复repeat次
+    {
+        long long a = rand() % (n - 3) + 2;//取一个随机数,[2,n-1)
+        long long x = pow(a, d, n);
+        long long y = 0;
+        for (int j = 0; j &lt; s; j++) {
+            y = mul(x, x, n);
+            if (y == 1 &amp;&amp; x != 1 &amp;&amp; x != (n - 1))return false;
+            x = y;
+        }
+        if (y != 1)return false; //费马小定理
+    }
+    return true;
+}
+
+long long gcd(long long a, long long b) {
+    return b == 0 ? a : gcd(b, a % b);
+}
+
+/**
+ * 找到n的一个因子
+ * @param n
+ * @param c
+ * @return
+ */
+long long pollard_rho(long long n, long long c) {
+    long long x = rand() % (n - 2) + 1;
+    long long y = x, i = 1, k = 2;
+    for (;;) {
+        i++;
+        x = (mul(x, x, n) + c) + n;//不断调整x2
+        long long d = gcd(y - x, n);
+        if (1 &lt; d &amp;&amp; d &lt; n)
+            return d;//找到因子
+        if (y == x)
+            return n;//找到循环，返回n，重新来
+        if (i == k) { //一个优化
+            y = x;
+            k &lt;&lt;= 1;
+        }
+    }
+}
+
+void find_factor(long long n, long long c) {
+    if (n == 1)return;//递归出口
+
+    if (miller_rabin(n, TEST_TIMES)) { //如果是素数，就加入
+        factor_nums[n]++;
+        return;
+    }
+
+    long long p = n;
+    while (p &gt;= n)
+        p = pollard_rho(p, c--);//不断找因子，知道找到为止，返回n说明没找到
+
+    find_factor(p, c);
+    find_factor(n / p, c);
+}
+
+int main() {
+    long long n;
+    // srand(time(nullptr)); 有的OJ似乎要去掉这句话
+    while (std::cin &gt;&gt; n) {
+        factor_nums.clear();
+        find_factor(n, rand() % (n - 1) + 1);//这是自己设置的一个数，c好像也能取2307
+        std::cout &lt;&lt; n &lt;&lt; " = ";
+        for (auto it = factor_nums.begin(); it != factor_nums.end();) {
+            std::cout &lt;&lt; it-&gt;first &lt;&lt; " ^ " &lt;&lt; it-&gt;second;
+            if ((++it) != factor_nums.end())
+                std::cout &lt;&lt; " * ";
+        }
+        std::cout &lt;&lt; std::endl;
+    }
+    return 0;
+}
+</code></pre>
+<h3 id="统计n的阶乘中质因子x的数量"><a class="header" href="#统计n的阶乘中质因子x的数量">统计n的阶乘中质因子x的数量</a></h3>
+<pre><code class="language-c++">/**
+ * 计算 n!中质因子 x 的数量
+ * @param n 
+ * @param x 
+ * @return 
+ */
+long long calc(long long n,long long x){  
+    long long num = 0;
+    while(n){
+        num += n/x;
+        n = n/x;
+    }
+    return num;
+}
+</code></pre>
+<h2 id="分数"><a class="header" href="#分数">分数</a></h2>
+<h3 id="循环小数转分数"><a class="header" href="#循环小数转分数">循环小数转分数</a></h3>
+<p>$$
+\frac{x}{y} = 0.171717... \
+\frac{100x}{y} = 17.171717... \
+\frac{99x}{y} = 17\
+\frac{x}{y} = \frac{17}{99}
+$$</p>
+<h2 id="素数"><a class="header" href="#素数">素数</a></h2>
+<h3 id="素数计数函数"><a class="header" href="#素数计数函数">素数计数函数</a></h3>
+<p>素数计数函数：小于等于x的素数的个数，用$$\pi(x)$$表示，随着x的增大，近似结果：</p>
+<p>$$\pi(x) \sim \frac{x}{\ln(x)}$$</p>
+<p>根据素数分布规律，素数越往后越分散</p>
+<p>$$\lim\limits_{n \to \infin} \pi(n) = \infin$$</p>
+<p>$$\lim\limits_{n \to \infin} \frac{\pi(n)}{n} = 0$$</p>
+<h3 id="判断一个数是否为素数"><a class="header" href="#判断一个数是否为素数">判断一个数是否为素数</a></h3>
+<pre><code class="language-c++">bool is_prime(a) {
+    if (a &lt; 2) return false;
+    for (int i = 2; i * i &lt;= a; ++i)
+        if (a % i == 0) return false;
+    return true;
+}
+</code></pre>
+<h4 id="卡迈克尔数"><a class="header" href="#卡迈克尔数">卡迈克尔数</a></h4>
+<pre><code class="language-wiki">561, 41041, 825265, 321197185, 5394826801, 232250619601,  9746347772161, 1436697831295441, 60977817398996785, 7156857700403137441, 1791562810662585767521, 87674969936234821377601,  6553130926752006031481761, 1590231231043178376951698401
+</code></pre>
+<h4 id="素数筛"><a class="header" href="#素数筛">素数筛</a></h4>
+<ul>
+<li>
+<p>埃氏筛</p>
+<pre><code class="language-c++">bool is_prime[1000006];
+std::vector&lt;int&gt; primes;
+
+void sieve(int n) {
+    memset(is_prime, true, sizeof(is_prime));
+    is_prime[1] = false;
+    for (int i = 2; i &lt;= n; ++i) {
+        if (is_prime[i]) {
+            primes.push_back(i);
+            for (int j = i * i; j &lt;= n; j += i) {
+                is_prime[j] = false;
+            }
+        }
+    }
+}
+</code></pre>
+</li>
+<li>
+<p>欧拉筛</p>
+<pre><code class="language-c++">//
+// Created by jiang on 2020/9/21.
+//
+
+#include &lt;cstdio&gt;
+#include &lt;vector&gt;
+
+constexpr int MAX_N = 100005;
+std::vector&lt;int&gt; primes;
+bool not_prime[MAX_N] = {false};
+
+void euler_thieve() {
+    for (int i = 2; i &lt; MAX_N; i++) {
+        if (!not_prime[i]) {
+            primes.push_back(i);
+        }
+        for (int j = 0; j &lt; primes.size() &amp;&amp; i * primes[j] &lt; MAX_N; ++j) {
+            not_prime[i * primes[j]] = true;
+            if (i % primes[j] == 0) {
+                break;
+            }
+        }
+    }
+}
+int main() {
+    euler_thieve();
+    for (int i = 0; i &lt; 100; ++i) printf("%d ", primes[i]);
+    return 0;
+}
+</code></pre>
+</li>
+</ul>
+<h3 id="梅森素数"><a class="header" href="#梅森素数">梅森素数</a></h3>
+<p>$$M_p = 2^p - 1, p是素数。若M_p是素数，则M_p是梅森素数$$</p>
+<p>2018年12月，总计发现51个梅森素数。</p>
+<div class="table-wrapper"><table><thead><tr><th><strong>序号</strong></th><th><img src="https://bkimg.cdn.bcebos.com/formula/d8c7c06e950362e1dc4b91f25c37f38a.svg" alt="img" /></th><th><strong>梅森素数</strong></th><th><strong>位数</strong></th><th><strong>发现时间</strong></th><th><strong>发现者</strong></th></tr></thead><tbody>
+<tr><td>1</td><td><strong>2</strong></td><td>3</td><td>1</td><td>古代</td><td>古人</td></tr>
+<tr><td>2</td><td><strong>3</strong></td><td>7</td><td>1</td><td>古代</td><td>古人</td></tr>
+<tr><td>3</td><td><strong>5</strong></td><td>31</td><td>2</td><td>古代</td><td>古人</td></tr>
+<tr><td>4</td><td><strong>7</strong></td><td><a href="https://baike.baidu.com/item/127/10558159">127</a></td><td>3</td><td>古代</td><td>古人</td></tr>
+<tr><td>5</td><td><strong>13</strong></td><td>8191</td><td>4</td><td>1456年</td><td>无名氏</td></tr>
+<tr><td>6</td><td><strong>17</strong></td><td>131071</td><td>6</td><td>1588年</td><td>Pietro Cataldi</td></tr>
+<tr><td>7</td><td><strong>19</strong></td><td>524287</td><td>6</td><td>1588年</td><td>Pietro Cataldi</td></tr>
+<tr><td>8</td><td><strong>31</strong></td><td><a href="https://baike.baidu.com/item/2147483647">2147483647</a></td><td>10</td><td>1772年</td><td>Leonhard Euler</td></tr>
+<tr><td>9</td><td><strong>61</strong></td><td>2305843009213693951</td><td>19</td><td>1883年</td><td>Ivan Mikheevich Pervushin</td></tr>
+<tr><td>10</td><td><strong>89</strong></td><td>618970019642690137449562111</td><td>27</td><td>1911年</td><td>Ralph Ernest Powers</td></tr>
+<tr><td>11</td><td><strong>107</strong></td><td>162259276829213363391578010288127</td><td>33</td><td>1914年</td><td>Ralph Ernest Powers</td></tr>
+<tr><td>12</td><td><strong>127</strong></td><td>170141183460469231731687303715884105727</td><td>39</td><td>1876年</td><td>Édouard Lucas</td></tr>
+</tbody></table>
+</div>
+<h2 id="卢卡斯定理"><a class="header" href="#卢卡斯定理">卢卡斯定理</a></h2>
+<p>对于质数$$p$$，有
+$$
+\binom{n}{m}\bmod p = \binom{\left\lfloor n/p \right\rfloor}{\left\lfloor m/p\right\rfloor}\cdot\binom{n\bmod p}{m\bmod p}\bmod p
+$$
+用于组合数求模</p>
+<pre><code class="language-c++">//
+// Created by jiang on 2020/9/18.
+// luogup3807
+
+#include &lt;cstdio&gt;
+
+constexpr int N = 100001;
+long long a[N];
+
+// 快速幂求逆元
+long long pow(long long x, int idx, int p) {
+    x %= p;
+    long long ans = 1;
+    while (idx) {
+        if (idx &amp; 1)
+            ans = ans * x % p;
+        idx &gt;&gt;= 1;
+        x = x * x % p;
+    }
+    return ans;
+}
+
+// 初始化n！% p
+void init_a(int p) {
+    a[0] = 1;
+    for (int i = 1; i &lt;= p; i++)
+        a[i] = (a[i - 1] * i) % p;
+}
+
+// C_n^m % p = n!/(m! * (n - m)!) % p
+long long C(long long n, long long m, int p) {
+    if (m &gt; n) return 0;
+    return ((a[n] * pow(a[m], p - 2, p)) % p * pow(a[n - m], p - 2, p) % p);
+}
+
+// 求C_n^m % p
+long long lucas(long long n, long long m, int p) {
+    if (m == 0) return 1;
+    return (C(n % p, m % p, p) * lucas(n / p, m / p, p)) % p;
+}
+
+int main() {
+    int t;
+    scanf("%d", &amp;t);
+
+    while (t--) {
+        long long n, m;
+        int p;
+        scanf("%lld %lld %d", &amp;n, &amp;m, &amp;p);
+        init_a(p);
+        printf("%lld\n", lucas(n + m, m, p));
+    }
+    return 0;
+}
+
+</code></pre>
+<h2 id="欧拉函数与欧拉定理"><a class="header" href="#欧拉函数与欧拉定理">欧拉函数与欧拉定理</a></h2>
+<p>$$
+\varphi(n)表示小于等于n和n互质的数的个数。\varphi(1) = 1 \
+n为质数时，\varphi(n) = n - 1
+$$</p>
+<p>欧拉函数是积性函数。若有$$\gcd(a, b) = 1, 那么\varphi(a * b) = \varphi(a) * \varphi(b)$$</p>
+<p><img src="./asset/%E6%AC%A7%E6%8B%89%E5%87%BD%E6%95%B0/1.png" alt="" /></p>
+<p><img src="./asset/%E6%AC%A7%E6%8B%89%E5%87%BD%E6%95%B0/2.png" alt="" /></p>
+<p><img src="./asset/%E6%AC%A7%E6%8B%89%E5%87%BD%E6%95%B0/3.png" alt="" /></p>
+<h3 id="求欧拉函数"><a class="header" href="#求欧拉函数">求欧拉函数</a></h3>
+<pre><code class="language-c++">int euler_phi(int n) {
+  int ans = n;
+  for (int i = 2; i * i &lt;= n; i++)
+    if (n % i == 0) {
+      ans = ans / i * (i - 1);
+      while (n % i == 0) n /= i;
+    }
+  if (n &gt; 1) ans = ans / n * (n - 1);
+  return ans;
+}
+</code></pre>
+<h3 id="筛欧拉函数"><a class="header" href="#筛欧拉函数">筛欧拉函数</a></h3>
+<pre><code class="language-c++">
+void phi_table(int n, int* phi) {
+  for (int i = 2; i &lt;= n; i++) phi[i] = 0;
+  phi[1] = 1;
+  for (int i = 2; i &lt;= n; i++)
+    if (!phi[i])
+      for (int j = i; j &lt;= n; j += i) {
+        if (!phi[j]) phi[j] = j;
+        phi[j] = phi[j] / i * (i - 1);
+      }
+}
+</code></pre>
+<h2 id="莫比乌斯反演"><a class="header" href="#莫比乌斯反演">莫比乌斯反演</a></h2>
+<h3 id="引理"><a class="header" href="#引理">引理</a></h3>
+<p>$$
+\forall a,b,c\in\mathbb{Z},\left\lfloor\frac{a}{bc}\right\rfloor=\left\lfloor\frac{\left\lfloor\frac{a}{b}\right\rfloor}{c}\right\rfloor
+$$</p>
+<h3 id="整除分块"><a class="header" href="#整除分块">整除分块</a></h3>
+<p><strong>例题</strong>
+$$
+求 \sum_{i=1}^n k \bmod i
+$$</p>
+<p>$$
+解：
+a \bmod b = a - b * \lfloor \frac{a}{b} \rfloor \
+ans =  \sum_{i=1}^n k \bmod i = \sum_{i=1}^n (k - i * \lfloor \frac{k}i \rfloor)
+= n * k - \sum_{i=1}^n  i * \lfloor \frac{k}i \rfloor
+$$</p>
+<pre><code class="language-c++">long long ans = n * k;
+for (long long l = 1, r; l &lt;= n; l = r + 1) {  //此处l意同i,r意同j,下个计算区间的l应为上个区间的r+1
+  if (k / l != 0)
+    r = min(k / (k / l), n);
+  else
+    r = n;  // l大于k时
+  ans -= (k / l) * (r - l + 1) * (l + r) / 2;  //这个区间内k/i均相等,对i求和是等差数列求和
+}
+</code></pre>
+<h4 id="快速算sum_i1n-lfloor-fracni-rfloor"><a class="header" href="#快速算sum_i1n-lfloor-fracni-rfloor">快速算$$\sum_{i=1}^n \lfloor \frac{n}i \rfloor$$</a></h4>
+<pre><code class="language-c++">int fuc(int n) {
+    int now=1,ans=0,r; //now就是上一个位置答案的下一个位置
+    for(;now&lt;=n;now=r+1){
+        r=n/(n/now); 
+        ans+=(r-now+1)*(n/now);
+    }
+    return ans;
+}
+</code></pre>
+<h3 id="莫比乌斯函数"><a class="header" href="#莫比乌斯函数">莫比乌斯函数</a></h3>
+<p>$$
+\mu(n)= \begin{cases} 1&amp;n=1\ 0&amp;n\text{ 含有平方因子}\ (-1)^k&amp;k\text{ 为 }n\text{ 的本质不同质因子个数}\ \end{cases}
+$$</p>
+<p>某个质因子次数超过一次则 $$\mu(n) = 0$$</p>
+<p>莫比乌斯函数是积性函数
+$$
+\mu(i*j)= \begin{cases} \mu(i) * \mu(j)&amp;\gcd(i, j )=1\ 0&amp;others \ \end{cases}
+$$</p>
+<p>莫比乌斯函数不但是积性函数，还有如下性质：
+$$
+\sum_{d\mid n}\mu(d)= \begin{cases} 1&amp;n=1\ 0&amp;n\neq 1\ \end{cases}
+$$
+也可以写成
+$$
+\displaystyle\sum_{d\mid n}\mu(d)=[n=1]
+$$
+补充结论
+$$
+\displaystyle [\gcd(i,j)=1] \iff\sum_{d\mid\gcd(i,j)}\mu(d)
+$$</p>
+<h4 id="线性筛莫比乌斯函数"><a class="header" href="#线性筛莫比乌斯函数">线性筛莫比乌斯函数</a></h4>
+<pre><code class="language-c++">//
+// Created by jiang on 2020/9/24.
+//
+
+#include &lt;cstdio&gt;
+
+constexpr int MAX_N = 5000005;
+int mu[MAX_N], primes[MAX_N], tot = 0;
+
+void get_mu(int n) {
+    static bool flag[MAX_N] = {false};
+    mu[1] = 1;
+    for (int i = 2; i &lt;= n; ++i) {
+        if (!flag[i]) primes[++tot] = i, mu[i] = -1;
+        for (int j = 1; j &lt;= tot &amp;&amp; i * primes[j] &lt;= n; ++j) {
+            flag[i * primes[j]] = true;
+            if (i % primes[j] == 0) {
+                mu[i * primes[j]] = 0;
+                break;
+            }
+            mu[i * primes[j]] = -mu[i];
+        }
+    }
+}
+
+int main() {
+    get_mu(30);
+    for (int i = 1; i &lt; 30; ++i) printf("%d ", mu[i]);
+    return 0;
+}
+</code></pre>
+<h4 id="莫比乌斯反演-1"><a class="header" href="#莫比乌斯反演-1">莫比乌斯反演</a></h4>
+<p><img src="./asset/%E8%8E%AB%E6%AF%94%E4%B9%8C%E6%96%AF%E5%8F%8D%E6%BC%94.png" alt="莫比乌斯反演" /></p>
+<h5 id="p2522-haoi2011problem-b"><a class="header" href="#p2522-haoi2011problem-b">P2522 [HAOI2011]Problem b</a></h5>
+<p><img src="./asset/mobius/luogu2522_1.png" alt="" /></p>
+<p><img src="./asset/mobius/luogu2522_2.png" alt="" /></p>
+<p>$$
+\sum_{d=1}^{\min({\lfloor \frac n{dk} \rfloor}, {\lfloor \frac m{dk} \rfloor})} \mu(d){\lfloor \frac n{dk} \rfloor}{\lfloor \frac m{dk} \rfloor} \</p>
+<p>很显然，式子可以数论分块求解。
+时间复杂度O(N + T\sqrt n)
+$$</p>
+<pre><code class="language-c++">//
+// Created by jiang on 2020/9/25.
+//
+
+#include &lt;cstdio&gt;
+#include &lt;algorithm&gt;
+
+constexpr int MAX_N = 50005;
+// mu在这里是前缀和
+int mu[MAX_N], primes[MAX_N], tot = 0;
+
+void get_mu(int n) {
+    static bool flag[MAX_N] = {false};
+    mu[1] = 1;
+    for (int i = 2; i &lt;= n; ++i) {
+        if (!flag[i]) primes[++tot] = i, mu[i] = -1;
+        for (int j = 1; j &lt;= tot &amp;&amp; i * primes[j] &lt;= n; ++j) {
+            flag[i * primes[j]] = true;
+            if (i % primes[j] == 0) {
+                mu[i * primes[j]] = 0;
+                break;
+            }
+            mu[i * primes[j]] = -mu[i];
+        }
+    }
+    for (int i = 1; i &lt; MAX_N; ++i) mu[i + 1] += mu[i];
+}
+
+// 一个二维数论分块
+int solve(int n, int m) {
+    int res = 0;
+    for (int i = 1, j; i &lt;= std::min(n, m); i = j + 1) {
+        j = std::min(n / (n / i), m / (m / i));
+        res += (mu[j] - mu[i - 1]) * (n / i) * (m / i);
+    }
+    return res;
+}
+
+int main() {
+    get_mu(MAX_N - 1);
+    int t;
+    scanf("%d", &amp;t);
+    while (t--) {
+        int a, b, c, d, k;
+        scanf("%d %d %d %d %d", &amp;a, &amp;b, &amp;c, &amp;d, &amp;k);
+        // 容斥
+        printf("%d\n",
+               solve((a - 1) / k, (c - 1) / k) - solve((a - 1) / k, d / k) -
+               solve(b / k, (c - 1) / k) + solve(b / k, d / k));
+    }
+    return 0;
+}
+</code></pre>
+<h5 id="洛谷p2257"><a class="header" href="#洛谷p2257">洛谷P2257</a></h5>
+<p>求
+$$
+\sum_{i=1}^n \sum_{j=1}^m [\gcd(i, j) \in prime] \
+= \sum_{\quad k \in prime}\sum_{i=1}^n \sum_{j=1}^m [\gcd(i, j) = k] \
+= \sum_{\quad k \in prime}\sum_{i=1}^{\lfloor \frac nk \rfloor} \sum_{j=1}^{\lfloor \frac mk \rfloor} [\gcd(i, j) = 1]   \
+=  \sum_{\quad k \in prime}\sum_{i=1}^{\lfloor \frac nk \rfloor} \sum_{j=1}^{\lfloor \frac mk \rfloor} \sum_{d\mid\gcd(i,j)}\mu(d) \
+=  \sum_{\quad k \in prime} \sum_{d=1}^{\min({\lfloor \frac n{k} \rfloor}, {\lfloor \frac m{k} \rfloor})} \mu(d){\lfloor \frac n{dk} \rfloor}{\lfloor \frac m{dk} \rfloor} \
+= \sum_{T=1}^{\min(n, m)} {\lfloor \frac n{T} \rfloor}{\lfloor \frac m{T} \rfloor} \sum_{k \in prime, k | T}u(\frac T k) \qquad ,T = dk
+$$</p>
+<p>$$\sum_{k \in prime, k | T}u(\frac T k)$$ 可以预处理前缀和，然后用整除分块做。</p>
+<pre><code class="language-c++">//
+// Created by jiang on 2020/9/26.
+//
+
+#include &lt;cstdio&gt;
+#include &lt;algorithm&gt;
+
+constexpr int MAX_N = 10000008;
+int mu[MAX_N], primes[MAX_N], tot = 0;
+long long f[MAX_N];
+
+void get_mu(int n) {
+    static bool flag[MAX_N] = {false};
+    mu[1] = 1;
+    for (int i = 2; i &lt;= n; ++i) {
+        if (!flag[i]) primes[++tot] = i, mu[i] = -1;
+        for (int j = 1; j &lt;= tot &amp;&amp; i * primes[j] &lt;= n; ++j) {
+            flag[i * primes[j]] = true;
+            if (i % primes[j] == 0) {
+                mu[i * primes[j]] = 0;
+                break;
+            }
+            mu[i * primes[j]] = -mu[i];
+        }
+    }
+    for (int i = 1; i &lt;= tot; ++i) {
+        for (int j = 1; primes[i] * j &lt; MAX_N; ++j) {
+            f[primes[i] * j] += mu[j];
+        }
+    }
+    for (int i = 2; i &lt; MAX_N; ++i) {
+        f[i] += f[i - 1];
+    }
+}
+
+long long solve(int n, int m) {
+    long long res = 0;
+    for (int i = 1, j; i &lt;= std::min(n, m); i = j + 1) {
+        j = std::min(n / (n / i), m / (m / i));
+        res += (f[j] - f[i - 1]) * (n / i) * (m / i);
+    }
+    return res;
+}
+
+int main() {
+    get_mu(MAX_N - 1);
+    int t;
+    scanf("%d", &amp;t);
+    while (t--) {
+        int n, m;
+        scanf("%d %d", &amp;n, &amp;m);
+        printf("%lld\n", solve(n, m));
+    }
+    return 0;
+}
+</code></pre>
+<h2 id="min_25筛"><a class="header" href="#min_25筛">Min_25筛</a></h2>
+<p>求质数前缀和</p>
+<pre><code class="language-c++">//
+// Created by jiang on 2020/9/20.
+//
+
+#include &lt;cstdio&gt;
+#include &lt;cmath&gt;
+using namespace std;
+const int N = 1000010;
+typedef long long LL;
+namespace Min25 {
+int prime[N], id1[N], id2[N], flag[N], ncnt, m;
+LL g[N], sum[N], a[N], T, n;
+
+inline int ID(LL x) { return x &lt;= T ? id1[x] : id2[n / x]; }
+
+inline LL calc(LL x) { return x * (x + 1) / 2 - 1; }
+
+inline LL f(LL x) { return x; }
+
+inline void init() {
+    T = sqrt(n + 0.5);
+    for (int i = 2; i &lt;= T; i++) {
+        if (!flag[i]) prime[++ncnt] = i, sum[ncnt] = sum[ncnt - 1] + i;
+        for (int j = 1; j &lt;= ncnt &amp;&amp; i * prime[j] &lt;= T; j++) {
+            flag[i * prime[j]] = 1;
+            if (i % prime[j] == 0) break;
+        }
+    }
+    for (LL l = 1; l &lt;= n; l = n / (n / l) + 1) {
+        a[++m] = n / l;
+        if (a[m] &lt;= T) id1[a[m]] = m; else id2[n / a[m]] = m;
+        g[m] = calc(a[m]);
+    }
+    for (int i = 1; i &lt;= ncnt; i++)
+        for (int j = 1; j &lt;= m &amp;&amp; (LL) prime[i] * prime[i] &lt;= a[j]; j++)
+            g[j] = g[j] - (LL) prime[i] * (g[ID(a[j] / prime[i])] - sum[i - 1]);
+}
+
+inline LL solve(LL x) {
+    if (x &lt;= 1) return x;
+    return n = x, init(), g[ID(n)];
+}
+}
+
+int main() {
+    LL n;
+    scanf("%lld", &amp;n);
+    printf("%lld\n", Min25::solve(n));
+    return 0;
+}
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="数据结构.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="数学.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="数据结构.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="数学.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

@@ -1,0 +1,707 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>动态规划 - Algorithms</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    </head>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('light')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="编程语言.html"><strong aria-hidden="true">1.</strong> 编程语言</a></li><li class="chapter-item expanded "><a href="算法基础.html"><strong aria-hidden="true">2.</strong> 算法基础</a></li><li class="chapter-item expanded "><a href="动态规划.html" class="active"><strong aria-hidden="true">3.</strong> 动态规划</a></li><li class="chapter-item expanded "><a href="计算几何.html"><strong aria-hidden="true">4.</strong> 计算几何</a></li><li class="chapter-item expanded "><a href="树上问题.html"><strong aria-hidden="true">5.</strong> 树上问题</a></li><li class="chapter-item expanded "><a href="数据结构.html"><strong aria-hidden="true">6.</strong> 数据结构</a></li><li class="chapter-item expanded "><a href="数论.html"><strong aria-hidden="true">7.</strong> 数论</a></li><li class="chapter-item expanded "><a href="数学.html"><strong aria-hidden="true">8.</strong> 数学</a></li><li class="chapter-item expanded "><a href="随机化算法.html"><strong aria-hidden="true">9.</strong> 随机化算法</a></li><li class="chapter-item expanded "><a href="图论.html"><strong aria-hidden="true">10.</strong> 图论</a></li><li class="chapter-item expanded "><a href="字符串.html"><strong aria-hidden="true">11.</strong> 字符串</a></li><li class="chapter-item expanded "><a href="练习.html"><strong aria-hidden="true">12.</strong> 练习</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Algorithms</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="动态规划"><a class="header" href="#动态规划">动态规划</a></h1>
+<ul>
+<li><a href="#%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98">背包问题</a>
+<ul>
+<li><a href="#%E8%83%8C%E5%8C%85dp%E4%BE%8B%E9%A2%98">背包dp例题</a></li>
+<li><a href="#%E4%BA%8C%E7%BB%B4%E8%83%8C%E5%8C%85">二维背包</a></li>
+</ul>
+</li>
+<li><a href="#%E6%9C%80%E9%95%BF%E5%85%AC%E5%85%B1%E5%AD%90%E4%B8%B2-interview">最长公共子串 [interview]</a></li>
+<li><a href="#%E6%9C%80%E9%95%BF%E5%85%AC%E5%85%B1%E5%AD%90%E5%BA%8F%E5%88%97-interview">最长公共子序列 [interview]</a></li>
+<li><a href="#%E6%9C%80%E9%95%BF%E9%80%92%E5%A2%9E%E5%AD%90%E5%BA%8F%E5%88%97">最长递增子序列</a>
+<ul>
+<li><a href="#%E4%BB%85%E8%BE%93%E5%87%BA%E9%95%BF%E5%BA%A6">仅输出长度</a></li>
+<li><a href="#%E6%89%93%E5%8D%B0%E5%BA%8F%E5%88%97">打印序列</a></li>
+<li><a href="#%E6%B1%82%E9%80%86%E5%BA%8F%E5%AF%B9%E7%9A%84%E4%B8%AA%E6%95%B0">求逆序对的个数</a></li>
+</ul>
+</li>
+<li><a href="#%E6%A0%91%E5%BD%A2dp">树形DP</a>
+<ul>
+<li><a href="#%E9%B8%A1%E8%9B%8B%E6%8E%89%E8%90%BD">鸡蛋掉落</a></li>
+</ul>
+</li>
+<li><a href="#%E5%8C%BA%E9%97%B4dp">区间DP</a></li>
+<li><a href="#%E6%95%B0%E4%BD%8Ddp">数位DP</a>
+<ul>
+<li><a href="#hdu2089-%E5%8C%BA%E9%97%B4%E5%86%85%E4%B8%8D%E8%83%BD%E5%87%BA%E7%8E%B04%E5%92%8C62%E7%9A%84%E6%95%B0%E5%AD%97%E4%B8%AA%E6%95%B0">hdu2089 区间内不能出现4和62的数字个数</a></li>
+<li><a href="#hdu3555-%E5%8C%BA%E9%97%B4%E5%86%85%E5%87%BA%E7%8E%B049%E7%9A%84%E6%95%B0%E5%AD%97%E4%B8%AA%E6%95%B0">hdu3555 区间内出现49的数字个数</a></li>
+</ul>
+</li>
+</ul>
+<h2 id="背包问题"><a class="header" href="#背包问题">背包问题</a></h2>
+<h3 id="背包dp例题"><a class="header" href="#背包dp例题">背包dp例题</a></h3>
+<p>bitset优化</p>
+<p>链接：https://ac.nowcoder.com/acm/problem/17193?&amp;headNav=acm
+来源：牛客网</p>
+<p>$$ 一共有 n个数，第 i 个数是 x_i ,  x_i 可以取 [l_i , r_i] 中任意的一个值。  设 S=\sum x_i^2,求 S 种类数。$$
+$$
+设dp[i][j] = 前i个数的平方和能否等于j。则dp[i][j] = dp[i-1][j - x_i^2]，可以用bitset优化
+$$</p>
+<pre><code class="language-c++">//
+// Created by jiang on 2020/8/16.
+// https://ac.nowcoder.com/acm/problem/17193?&amp;headNav=acm
+
+#include &lt;cstdio&gt;
+#include &lt;bitset&gt;
+
+std::bitset&lt;1000001&gt; dp[101];
+
+int main() {
+    int n, l, r;
+    scanf("%d", &amp;n);
+    dp[0][0] = true;
+    for (int i = 1; i &lt;= n; ++i) {
+        scanf("%d %d", &amp;l, &amp;r);
+        for (int j = l; j &lt;= r; ++j) {
+            dp[i] |= dp[i-1] &lt;&lt; (j*j);
+        }
+    }
+    printf("%zu\n", dp[n].count());
+    return 0;
+}
+</code></pre>
+<h3 id="二维背包"><a class="header" href="#二维背包">二维背包</a></h3>
+<p>leetcode 879 盈利计划</p>
+<p>集团里有 n 名员工，他们可以完成各种各样的工作创造利润。</p>
+<p>第 i 种工作会产生 profit[i] 的利润，它要求 group[i] 名成员共同参与。如果成员参与了其中一项工作，就不能参与另一项工作。</p>
+<p>工作的任何至少产生 minProfit 利润的子集称为盈利计划。并且工作的成员总数最多为 n 。</p>
+<p>有多少种计划可以选择？因为答案很大，所以 返回结果模 10^9 + 7 的值。</p>
+<p>来源：力扣（LeetCode）
+链接：https://leetcode-cn.com/problems/profitable-schemes</p>
+<pre><code class="language-python">#利润背包，可以溢出
+for p in ps: 
+    for i in range(P+p, p-1, -1):
+        dp[min(i,P)] += dp[i-n]
+#人员背包，不能溢出
+for g in gs: 
+    for i in range(G, g-1, -1):
+        dp[i] += dp[i-n]
+
+# 二维背包
+for p, g in zip(profit, group):
+    for i in range(P+p, p-1, -1): 
+        for j in range(G , g-1, -1):
+            # 利润超过P的也放在 dp[P] 里 方便最后的统计
+            dp[min(P,i)][j] += dp[i-p][j-g]
+
+# 题解
+class Solution:
+    def profitableSchemes(self, G: int, P: int, group: List[int], profit: List[int]) -&gt; int:
+        # dp[P][G] 达到P利润，需要的人数G 的方法数
+        dp = [[0] * (N + 1)  for _ in range(P + 1)]
+        dp[0][0] = 1
+        for p, g in zip(profit, group):
+            for i in range(P+p, p-1, -1):
+                for j in range(G , g-1, -1):
+                    dp[min(P,i)][j] += dp[i-p][j-g]
+        return sum(dp[P]) % (10 ** 9 + 7)
+
+</code></pre>
+<pre><code class="language-cpp">class Solution {
+public:
+	int profitableSchemes(int n, int minProfit, vector&lt;int&gt; &amp;group, vector&lt;int&gt; &amp;profit) {
+		vector&lt;vector&lt;long long&gt;&gt; dp(minProfit + 1, vector&lt;long long&gt;(n + 1, 0));
+		dp[0][0] = 1;
+		for (int i = 0; i &lt; group.size(); ++i) {
+            // 二维背包 两重for循环可以交换位置
+			for (int j = n; j &gt;= group[i]; --j) {
+				for (int k = minProfit + profit[i]; k &gt;= profit[i]; --k) {
+					dp[std::min(k, minProfit)][j] += dp[k - profit[i]][j - group[i]];
+				}
+			}
+		}
+		long long ans = 0;
+		for (int i = 0; i &lt;= n; ++i) {
+			ans = (ans + dp[minProfit][i]) % 1000000007;
+		}
+		return (int)ans;
+	}
+};
+
+</code></pre>
+<h2 id="最长公共子串-interview"><a class="header" href="#最长公共子串-interview">最长公共子串 [interview]</a></h2>
+<p>dp[i][j]表示在str1中以第i个字符结尾，在str2中以第j个字符结尾时的公共子串长度。</p>
+<p>$$
+dp(i, j) = \begin{cases}
+dp(i-1, j-1) + 1 &amp; str1[i] = str2[j] \
+0 &amp; str1[i] \neq str2[j]
+\end{cases}
+$$</p>
+<p>牛客 NC127 最长公共子串</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    string LCS(string str1, string str2) {
+        //dp[i][j]表示到str1第i个个到str2第j个为止的公共子串长度
+        vector&lt;vector&lt;int&gt; &gt; dp(str1.length() + 1, vector&lt;int&gt;(str2.length() + 1, 0)); 
+        int max = 0;
+        int pos = 0;
+        for(int i = 1; i &lt;= str1.length(); i++){
+            for(int j = 1; j &lt;= str2.length(); j++){
+                //如果该两位相同
+                if(str1[i - 1] == str2[j - 1]){ 
+                    //则增加长度
+                    dp[i][j] = dp[i - 1][j - 1] + 1; 
+                }
+                else{ 
+                    //该位置为0
+                    dp[i][j] = 0; 
+                }
+                //更新最大长度
+                if(dp[i][j] &gt; max){ 
+                    max = dp[i][j];
+                    pos = i - 1;
+                }
+            }
+        }
+        return str1.substr(pos - max + 1, max);
+    }
+};
+</code></pre>
+<h2 id="最长公共子序列-interview"><a class="header" href="#最长公共子序列-interview">最长公共子序列 [interview]</a></h2>
+<p>f(i, j)表示只考虑序列A前i个元素，序列B前j个元素的最长公共子序列时的长度。</p>
+<p>$$
+f(i, j) = \begin{cases}
+f(i-1, j-1) + 1 &amp; A[i] = B[j] \
+max(f(i-1, j), f(i, j-1)) &amp; A[i] \neq B[j]
+\end{cases}
+$$</p>
+<p>如果要输出最长公共子序列，可以根据dp数组逆推。</p>
+<p>牛客BM65 最长公共子序列(二)</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    string LCS(string s1, string s2) {
+        //只要有一个空字符串便不会有子序列
+        if(s1.length() == 0 || s2.length() == 0) 
+            return "-1";
+        int len1 = s1.length();
+        int len2 = s2.length();
+        //dp[i][j]表示第一个字符串到第i位，第二个字符串到第j位为止的最长公共子序列长度
+        vector&lt;vector&lt;int&gt;&gt; dp(len1 + 1, vector&lt;int&gt;(len2 + 1, 0)); 
+        //遍历两个字符串每个位置求的最长长度
+        for(int i = 1; i &lt;= len1; i++){
+            for(int j = 1; j &lt;= len2; j++){
+                //遇到两个字符相等
+                if(s1[i - 1] == s2[j -1])
+                    //来自于左上方
+                    dp[i][j] = dp[i - 1][j - 1] + 1;
+                //遇到的两个字符不同
+                else
+                    //来自左边或者上方的最大值
+                    dp[i][j] = max(dp[i - 1][j], dp[i][j - 1]);
+            }
+        }
+        //从动态规划数组末尾开始
+        int i = len1, j = len2;
+        stack&lt;char&gt; s;
+        while(dp[i][j]){
+            //来自于左方向
+            if(dp[i][j] == dp[i - 1][j])
+                i--;
+            //来自于上方向
+            else if(dp[i][j] == dp[i][j - 1])
+                j--;
+            //来自于左上方向
+            else if(dp[i][j] &gt; dp[i - 1][j - 1]){
+                i--;
+                j--;
+                //只有左上方向才是字符相等的情况，入栈，逆序使用
+                s.push(s1[i]); 
+           }
+        }
+        string res = "";
+        //拼接子序列
+        while(!s.empty()){
+            res += s.top();
+            s.pop();
+        }
+        //如果两个完全不同，返回字符串为空，则要改成-1
+        return res != "" ? res : "-1";  
+    }
+};
+</code></pre>
+<h2 id="最长递增子序列"><a class="header" href="#最长递增子序列">最长递增子序列</a></h2>
+<p><img src="./asset/LIS.png" alt="LIS" /></p>
+<p><a href="https://github.com/labuladong/fucking-algorithm/blob/master/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92%E7%B3%BB%E5%88%97/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92%E8%AE%BE%E8%AE%A1%EF%BC%9A%E6%9C%80%E9%95%BF%E9%80%92%E5%A2%9E%E5%AD%90%E5%BA%8F%E5%88%97.md">图片来源</a></p>
+<h3 id="仅输出长度"><a class="header" href="#仅输出长度">仅输出长度</a></h3>
+<p>二分查找 $$O(nlogn)$$</p>
+<pre><code class="language-c++">// 严格递增
+#include &lt;cstdio&gt;
+#include &lt;algorithm&gt;
+
+const int MAX_N = 200000;
+int arr[MAX_N] = {0};
+
+int main() {
+    int n;
+    scanf("%d", &amp;n);
+
+    int element, idx = 0;
+    int *index;
+    for (int i = 0; i &lt; n; ++i) {
+        scanf("%d", &amp;element);
+        if ((index = std::lower_bound(arr, arr + idx, element)) == arr + idx) idx++;
+        *index = element;
+    }
+    printf("%d\n", idx);
+    for (int i = 0; i &lt; idx; ++i) {
+        printf("%d ", arr[i]);
+    }
+    printf("\n");
+    return 0;
+}
+</code></pre>
+<pre><code class="language-c++">// 单调递增
+std::vector&lt;int&gt; get_lcs(const std::vector&lt;int&gt; &amp;vec) {
+    std::vector&lt;int&gt; lcs;
+    decltype(lcs.begin()) place;
+    for (auto &amp;e : vec) {
+        if ((place = std::upper_bound(lcs.begin(), lcs.end(), e)) == lcs.end())
+            lcs.push_back(e);
+        else
+            *place = e;
+    }
+    return lcs;
+}
+</code></pre>
+<h3 id="打印序列"><a class="header" href="#打印序列">打印序列</a></h3>
+<h3 id="求逆序对的个数"><a class="header" href="#求逆序对的个数">求逆序对的个数</a></h3>
+<p>相当于原序列长度-最长递增子序列长度</p>
+<h2 id="树形dp"><a class="header" href="#树形dp">树形DP</a></h2>
+<p>Leetcode <a href="https://leetcode-cn.com/problems/sum-of-distances-in-tree/">834. 树中距离之和</a></p>
+<p>第一次dfs求所有子树的高度以及根节点到其它节点距离之和。</p>
+<p>第二次dfs开始换根，求根节点到其它节点距离之和。</p>
+<pre><code class="language-c++">class Solution {
+public:
+    vector&lt;vector&lt;int&gt;&gt; tree;
+    vector&lt;int&gt; sub_tree_size;
+    vector&lt;int&gt; distance_sum;
+    vector&lt;int&gt; ans;
+    void build_tree(int N, vector&lt;vector&lt;int&gt;&gt; &amp;edges) {
+        tree.resize(N);
+        for (auto &amp;e : edges) {
+            tree[e[0]].push_back(e[1]);
+            tree[e[1]].push_back(e[0]);
+        }
+    }
+    vector&lt;int&gt; sumOfDistancesInTree(int N, vector&lt;vector&lt;int&gt;&gt; &amp;edges) {
+        if (N == 1) return {0};
+        build_tree(N, edges);
+        sub_tree_size.resize(N);
+        ans.resize(N);
+        distance_sum.resize(N);
+        dfs(0, -1);
+        dfs2(0, -1);
+        return ans;
+    }
+
+    void dfs(int cur_node, int father) {
+        sub_tree_size[cur_node] = 1;
+        distance_sum[cur_node] = 0;
+        for (auto &amp;child : tree[cur_node]) {
+            if (child != father) {
+                dfs(child, cur_node);
+                sub_tree_size[cur_node] += sub_tree_size[child];
+                distance_sum[cur_node] += distance_sum[child] + sub_tree_size[child];
+            }
+        }
+    }
+
+    void dfs2(int cur_node, int father) {
+        if (father != -1) {
+            ans[cur_node] = ans[father] + sub_tree_size[0] - 2 * sub_tree_size[cur_node];
+        } else {
+            ans[cur_node] = distance_sum[cur_node];
+        }
+        for (auto &amp;child : tree[cur_node]) {
+            if (child != father) {
+                dfs2(child, cur_node);
+            }
+        }
+    }
+};
+
+</code></pre>
+<h3 id="鸡蛋掉落"><a class="header" href="#鸡蛋掉落">鸡蛋掉落</a></h3>
+<p>https://leetcode-cn.com/problems/super-egg-drop/</p>
+<p>K个鸡蛋，N层楼，求最坏情况丢几次鸡蛋，就能确定鸡蛋最低摔碎的位置。</p>
+<p>设$$dp[t][k]$$表示操作t次，k个鸡蛋，最多能确定几层楼。$$dp[1][k]=1, dp[t][1]=t,\ dp[t][k] = 1 + dp[t-1][k]+dp[t-1][k-1]$$</p>
+<p>第一次丢鸡蛋在$$dp[t-1][k-1]$$楼，如果碎了，后面t-1次操作，k-1个鸡蛋能确定位置；如果没碎，往上还能确定$$dp[t-1][k]$$层楼</p>
+<pre><code class="language-c++">class Solution {
+public:
+    int superEggDrop(int k, int n) {
+        if (k == 1 || n == 1) return n;
+        std::vector&lt;std::vector&lt;int&gt;&gt; dp(n+1, std::vector&lt;int&gt;(k+1));
+        for (int _k = 1; _k &lt;= k; ++_k)
+            dp[1][_k] = 1;
+        for (int t = 1; t &lt;= n; ++t)
+            dp[t][1] = t;
+        for (int t = 2; t &lt;= n; ++t) {
+            for (int _k = 2; _k &lt;= k; ++_k) {
+                dp[t][_k] = 1 + dp[t-1][_k] + dp[t-1][_k-1];
+                if (dp[t][_k] &gt;= n) {
+                    return t;
+                }
+            }
+        }
+        return -1;
+    }
+};
+</code></pre>
+<h2 id="区间dp"><a class="header" href="#区间dp">区间DP</a></h2>
+<p>https://codeforces.com/problemset/problem/1509/C</p>
+<p>给n个数$$a_1,a_2,…,a_n$$，记$$d_i=max(a_1,a_2,…,a_i)−min(a_1,a_2,…,a_i).$$对它们排序，使得 $$d_1+d_2+⋯+d_n$$最小</p>
+<pre><code class="language-python"># -*- coding: utf-8 -*-
+
+n = int(input())
+arr = sorted(map(int, input().split()))
+
+dp = [[0] * n for _ in range(n)]
+
+for i in reversed(range(n)):
+    for j in range(i + 1, n):
+        dp[i][j] = arr[j] - arr[i] + min(dp[i + 1][j], dp[i][j - 1])
+
+print(dp[0][-1])
+
+</code></pre>
+<h2 id="数位dp"><a class="header" href="#数位dp">数位DP</a></h2>
+<p><a href="https://leetcode.cn/problems/non-negative-integers-without-consecutive-ones/description/">LeetCode 600 不含连续1的非负整数</a></p>
+<h3 id="hdu2089-区间内不能出现4和62的数字个数"><a class="header" href="#hdu2089-区间内不能出现4和62的数字个数">hdu2089 区间内不能出现4和62的数字个数</a></h3>
+<pre><code class="language-c++">//
+// Created by Jiang Yinzuo on 2020/4/8.
+//
+
+#include &lt;cstdio&gt;
+#include &lt;cstring&gt;
+
+int dp[8][2];
+
+// 数位数组，高位和数字的高位对应，最低位下标为1
+int digit[8];
+
+/**
+ * 从最高位往下搜索，如果遍历时最高不受限制，则将搜索结果存入dp数组。
+ *
+ * @param place 当前搜索到第几位
+ * @param pre_is_six 该数字高位是不是6
+ * @param is_highest 当前位遍历时是否受到上限限制
+ */
+int dfs(int place, bool pre_is_six, bool is_highest) {
+    if (place == 0) return 1;
+    
+    // 先前搜索过，直接返回
+    if (!is_highest &amp;&amp; dp[place][pre_is_six] != -1)
+        return dp[place][pre_is_six];
+    
+    // 枚举该位数字的上限
+    int limit = is_highest ? digit[place] : 9;
+    int result = 0;
+    for (int num = 0; num &lt;= limit; ++num) {
+        if (num == 4 || (pre_is_six &amp;&amp; num == 2)) continue;
+        
+        // 只有当前位搜索上限受到限制，且当前位枚举到最高位时，下一位的上限才受到限制
+        result += dfs(place - 1, num == 6, is_highest &amp;&amp; num == limit);
+    }
+    if (!is_highest)
+        dp[place][pre_is_six] = result;
+    return result;
+}
+
+int solve(int num) {
+    int i = 0;
+    while (num) {
+        digit[++i] = num % 10;
+        num /= 10;
+    }
+    return dfs(i, false, true);
+}
+
+int main() {
+    int a, b;
+    memset(dp, -1, sizeof(dp));
+    while (scanf("%d%d", &amp;a, &amp;b), a || b) {
+        printf("%d\n", solve(b) - solve(a - 1));
+    }
+    return 0;
+}
+</code></pre>
+<h3 id="hdu3555-区间内出现49的数字个数"><a class="header" href="#hdu3555-区间内出现49的数字个数">hdu3555 区间内出现49的数字个数</a></h3>
+<pre><code class="language-c++">//
+// Created by Jiang Yinzuo on 2020/4/8.
+//
+
+#include &lt;iostream&gt;
+#include &lt;cstring&gt;
+
+long long dp[64][2];
+int digit[64];
+
+long long dfs(int place, bool pre_is_four, bool is_limited) {
+    if (place == 0) return 1;
+    if (!is_limited &amp;&amp; dp[place][pre_is_four] != -1) return dp[place][pre_is_four];
+
+    long long result = 0;
+    int limit = is_limited ? digit[place] : 9;
+    for (int i = 0; i &lt;= limit; ++i) {
+        if (pre_is_four &amp;&amp; i == 9) continue;
+        result += dfs(place - 1, i == 4, is_limited &amp;&amp; i == limit);
+    }
+
+    if (!is_limited) dp[place][pre_is_four] = result;
+    return result;
+}
+
+long long solve(long long num) {
+    long long tempNum = num;
+    int i = 0;
+    while (tempNum) {
+        digit[++i] = tempNum % 10;
+        tempNum /= 10;
+    }
+    return num + 1 - dfs(i, false, true);
+}
+
+int main() {
+    std::ios::sync_with_stdio(false);
+    std::cin.tie(0);
+    memset(dp, -1, sizeof(dp));
+    int t;
+    std::cin &gt;&gt; t;
+
+    long long n;
+    while (t--) {
+        std::cin &gt;&gt; n;
+        std::cout &lt;&lt; solve(n) &lt;&lt; std::endl;
+    }
+    return 0;
+}
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="算法基础.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="计算几何.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="算法基础.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="计算几何.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

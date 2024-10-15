@@ -1,0 +1,1445 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>图论 - Algorithms</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    </head>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('light')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="编程语言.html"><strong aria-hidden="true">1.</strong> 编程语言</a></li><li class="chapter-item expanded "><a href="算法基础.html"><strong aria-hidden="true">2.</strong> 算法基础</a></li><li class="chapter-item expanded "><a href="动态规划.html"><strong aria-hidden="true">3.</strong> 动态规划</a></li><li class="chapter-item expanded "><a href="计算几何.html"><strong aria-hidden="true">4.</strong> 计算几何</a></li><li class="chapter-item expanded "><a href="树上问题.html"><strong aria-hidden="true">5.</strong> 树上问题</a></li><li class="chapter-item expanded "><a href="数据结构.html"><strong aria-hidden="true">6.</strong> 数据结构</a></li><li class="chapter-item expanded "><a href="数论.html"><strong aria-hidden="true">7.</strong> 数论</a></li><li class="chapter-item expanded "><a href="数学.html"><strong aria-hidden="true">8.</strong> 数学</a></li><li class="chapter-item expanded "><a href="随机化算法.html"><strong aria-hidden="true">9.</strong> 随机化算法</a></li><li class="chapter-item expanded "><a href="图论.html" class="active"><strong aria-hidden="true">10.</strong> 图论</a></li><li class="chapter-item expanded "><a href="字符串.html"><strong aria-hidden="true">11.</strong> 字符串</a></li><li class="chapter-item expanded "><a href="练习.html"><strong aria-hidden="true">12.</strong> 练习</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Algorithms</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="图论"><a class="header" href="#图论">图论</a></h1>
+<ul>
+<li><a href="#%E5%88%A4%E6%96%AD%E6%A0%91%E8%BE%B9%E5%89%8D%E5%90%91%E8%BE%B9%E5%9B%9E%E8%BE%B9%E6%A8%AA%E8%B7%A8%E8%BE%B9">判断树边，前向边，回边，横跨边</a>
+<ul>
+<li><a href="#%E5%88%A4%E6%96%AD%E6%9C%89%E6%B2%A1%E6%9C%89%E7%8E%AF">判断有没有环</a></li>
+</ul>
+</li>
+<li><a href="#%E6%8B%93%E6%89%91%E6%8E%92%E5%BA%8F">拓扑排序</a></li>
+<li><a href="#%E4%BA%8C%E5%88%86%E5%9B%BE">二分图</a>
+<ul>
+<li><a href="#%E6%80%A7%E8%B4%A8">性质</a>
+<ul>
+<li><a href="#%E5%88%A4%E6%96%AD%E4%B8%80%E5%BC%A0%E5%9B%BE%E6%98%AF%E4%B8%8D%E6%98%AF%E4%BA%8C%E5%88%86%E5%9B%BE">判断一张图是不是二分图</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E4%BA%8C%E5%88%86%E5%9B%BE%E6%9C%80%E5%A4%A7%E5%8C%B9%E9%85%8D">二分图最大匹配</a>
+<ul>
+<li><a href="#dfs%E9%82%BB%E6%8E%A5%E7%9F%A9%E9%98%B5%E7%89%88%E5%8C%88%E7%89%99%E5%88%A9%E7%AE%97%E6%B3%95hdu2063">DFS邻接矩阵版匈牙利算法（hdu2063）</a></li>
+</ul>
+</li>
+<li><a href="#%E4%BA%8C%E5%88%86%E5%9B%BE%E6%9C%80%E5%A4%A7%E6%9D%83%E5%8C%B9%E9%85%8D--km%E7%AE%97%E6%B3%95%E5%A4%8D%E6%9D%82%E5%BA%A6on3">二分图最大权匹配:  KM算法，复杂度O(n^3)</a></li>
+<li><a href="#%E7%A8%B3%E5%AE%9A%E5%A9%9A%E5%A7%BB%E9%97%AE%E9%A2%98gale-shapley---%E5%A9%9A%E5%A7%BB%E5%8C%B9%E9%85%8D%E7%AE%97%E6%B3%95%E7%AE%97%E6%B3%95">稳定婚姻问题，Gale-Shapley---婚姻匹配算法算法</a></li>
+<li><a href="#%E7%BD%91%E7%BB%9C%E6%B5%81">网络流</a>
+<ul>
+<li><a href="#%E6%9C%80%E5%A4%A7%E6%B5%81">最大流</a>
+<ul>
+<li><a href="#dinic">Dinic</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E6%9C%80%E7%9F%AD%E8%B7%AF">最短路</a>
+<ul>
+<li><a href="#dijkstra">Dijkstra</a></li>
+<li><a href="#floyd">Floyd</a></li>
+<li><a href="#spfa">SPFA</a></li>
+</ul>
+</li>
+<li><a href="#%E5%B7%AE%E5%88%86%E7%BA%A6%E6%9D%9F%E4%B8%8E%E5%88%A4%E8%B4%9F%E7%8E%AF">差分约束与判负环</a>
+<ul>
+<li><a href="#spfa%E5%88%A4%E8%B4%9F%E7%8E%AF">SPFA判负环</a></li>
+</ul>
+</li>
+<li><a href="#%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91">最小生成树</a>
+<ul>
+<li><a href="#prim">Prim</a></li>
+</ul>
+</li>
+<li><a href="#%E6%A0%91">树</a>
+<ul>
+<li><a href="#%E5%9B%BE%E5%88%A4%E6%A0%91">图判树</a></li>
+<li><a href="#lca">LCA</a></li>
+<li><a href="#%E6%A0%91%E7%9A%84%E7%9B%B4%E5%BE%84">树的直径</a>
+<ul>
+<li><a href="#%E8%A7%A3%E6%B3%95">解法</a></li>
+<li><a href="#%E6%A0%91%E7%9A%84%E4%B8%AD%E5%BF%83">树的中心</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE">参考文献</a></li>
+</ul>
+<h2 id="判断树边前向边回边横跨边"><a class="header" href="#判断树边前向边回边横跨边">判断树边，前向边，回边，横跨边</a></h2>
+<ul>
+<li>https://blog.csdn.net/u014665013/article/details/51351371</li>
+</ul>
+<p><img src="./graph-edge-type.png" alt="graph-edge-type" /></p>
+<ul>
+<li>https://blog.csdn.net/wshish920907/article/details/73276813</li>
+</ul>
+<p>visited数组取值0, 1, 2</p>
+<p>0, 尚未访问，表示树边。1，孩子还没访问完，表示回边。2，孩子访问完了，表示前向边/横跨边。</p>
+<p>可以增加一个时间戳，记录每个节点首次访问的时间戳（访问dfs序）。当visited=2时，对于边 u -&gt; v，若u的时间戳小于v的时间戳，则是前向边，否则是横跨边。</p>
+<h3 id="判断有没有环"><a class="header" href="#判断有没有环">判断有没有环</a></h3>
+<p>即判断是否存在回边</p>
+<p>https://leetcode.cn/problems/course-schedule/?envType=problem-list-v2&amp;envId=graph</p>
+<pre><code class="language-cpp">class Solution {
+    bool result = true;
+    void doDfs(
+        int &amp;ts,
+        std::vector&lt;int&gt; &amp;visited,
+        std::vector&lt;int&gt; &amp;order,
+        std::vector&lt;std::vector&lt;int&gt;&gt; &amp;graph,
+        int cur_node
+    ) {
+        if (order[cur_node] &gt; 0) {
+            return;
+        }
+        order[cur_node] = ts++;
+        visited[cur_node] = 1;
+        for (auto child : graph[cur_node]) {
+            if (visited[child] == 0) {
+                // tree edge
+            } else if (visited[child] == 1) {
+                // backward edge
+                result = false;
+            } else {
+                // cross edge or forward edge
+                if (order[cur_node] &lt; order[child]) {
+                    // forword edge
+                } else {
+                    // cross edge
+                }
+            }
+            doDfs(ts, visited, order, graph, child);
+        }
+        visited[cur_node] = 2;
+    }
+    void dfs(std::vector&lt;std::vector&lt;int&gt;&gt; &amp;graph) {
+        int ts = 1;
+        result = true;
+        std::vector&lt;int&gt; visited(graph.size(), 0), order(graph.size(), 0);
+        for (int i = 0; i &lt; graph.size(); ++i) {
+            if (visited[i] == 0) {
+                doDfs(ts, visited, order, graph, i);
+            }
+        }
+    }
+public:
+    bool canFinish(int numCourses, vector&lt;vector&lt;int&gt;&gt;&amp; prerequisites) {
+        std::vector&lt;std::vector&lt;int&gt;&gt; graph(numCourses);
+        for (auto &amp;p : prerequisites) {
+            graph[p[1]].push_back(p[0]);
+        }
+
+        dfs(graph);
+        return result;
+    }
+};
+</code></pre>
+<h2 id="拓扑排序"><a class="header" href="#拓扑排序">拓扑排序</a></h2>
+<p>节点带权重，在满足拓扑序的情况下，按权重高低优先输出。</p>
+<p>思路：利用优先队列作为中间结构，每次将入度为0的点加入优先队列，然后取出最高优先级的点，并更新该点所有邻接点的入度，如果入度为0，则加入优先队列。</p>
+<pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;int&gt; findOrder(int numCourses, vector&lt;vector&lt;int&gt;&gt;&amp; prerequisites) {
+        std::vector&lt;std::vector&lt;int&gt;&gt; graph(numCourses);
+        std::vector&lt;int&gt; in_degree(numCourses);
+
+        for (auto &amp;e : prerequisites) {
+            graph[e[1]].push_back(e[0]);
+            in_degree[e[0]]++;
+        }
+
+        std::queue&lt;int&gt; in_q;
+        for (int i = 0; i &lt; in_degree.size(); ++i) {
+            if (in_degree[i] == 0) {
+                in_q.push(i);
+            }
+        }
+        std::vector&lt;int&gt; learn_order;
+        while (!in_q.empty()) {
+            auto node = in_q.front();
+            in_q.pop();
+            learn_order.push_back(node);
+            for (auto child : graph[node]) {
+                in_degree[child]--;
+                if (in_degree[child] == 0) {
+                    in_q.push(child);
+                }
+            }
+        }
+        return learn_order.size() == numCourses ? learn_order : std::vector&lt;int&gt;();
+    }
+};
+</code></pre>
+<h2 id="二分图"><a class="header" href="#二分图">二分图</a></h2>
+<h3 id="性质"><a class="header" href="#性质">性质</a></h3>
+<p><strong>二分图不存在长度为奇数的环</strong></p>
+<p>因为每一条边都是从一个集合走到另一个集合，只有走偶数次才可能回到同一个集合。</p>
+<h4 id="判断一张图是不是二分图"><a class="header" href="#判断一张图是不是二分图">判断一张图是不是二分图</a></h4>
+<p>dfs，如果存在奇环，则不是二分图；不存在奇环则是二分图</p>
+<pre><code class="language-c++">constexpr int MAX_N = 5001;
+std::vector&lt;int&gt; graph[MAX_N];
+int tag[MAX_N] = {0};
+
+// example: is_bigraph(1, 1);
+bool is_bigraph(int cur_v, int last_tag) {
+    tag[cur_v] = 3 - last_tag;
+    for (auto i : graph[cur_v]) {
+        if (tag[cur_v] == tag[i] || tag[i] == 0 &amp;&amp; !is_bigraph(i, tag[cur_v])) {
+            return false;
+        }
+    }
+    return true;
+}
+</code></pre>
+<h2 id="二分图最大匹配"><a class="header" href="#二分图最大匹配">二分图最大匹配</a></h2>
+<p><img src="./asset/%E4%BA%8C%E5%88%86%E5%9B%BE.png" alt="5" /></p>
+<p><img src="./asset/%E4%BA%8C%E5%88%86%E5%9B%BE%E5%A2%9E%E5%B9%BF%E8%B7%AF.png" alt="6" /></p>
+<p><strong>交替路</strong>：从一个未匹配点出发，依次经过非匹配边、匹配边、非匹配边…形成的路径叫交替路。</p>
+<p><strong>增广路</strong>：从一个未匹配点出发，走交替路，如果途径另一个未匹配点（出发的点不算），则这条交替路称为增广路（agumenting path）。例如，图 5 中的一条增广路如图 6 所示（图中的匹配点均用红色标出）</p>
+<p><strong>匈牙利算法</strong>：不停地找增广路，找到一条增广路，就把其中匹配边变非匹配，非匹配边变成匹配。<a href="#refer-anchor-1"><sup>1</sup></a></p>
+<h3 id="dfs邻接矩阵版匈牙利算法hdu2063"><a class="header" href="#dfs邻接矩阵版匈牙利算法hdu2063">DFS邻接矩阵版匈牙利算法（hdu2063）</a></h3>
+<pre><code class="language-c++">//
+// Created by Jiang Yinzuo on 2020/7/15.
+//
+
+#include &lt;cstdio&gt;
+#include &lt;cstring&gt;
+
+bool graph[501][501]; /* 邻接矩阵存有向图 u -&gt; v */
+bool matched[501];    /* 一次dfs中，v是否已经同一个u匹配 */
+int link_u[501];      /* 点v同哪个u匹配 */
+
+bool dfs(int u, int v_num) {
+    for (int v = 1; v &lt;= v_num; ++v) {
+        if (graph[u][v] &amp;&amp; !matched[v]) {
+            matched[v] = true;
+            if (link_u[v] == -1 || dfs(link_u[v], v_num)) {
+                link_u[v] = u;
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+/**
+ * 匈牙利算法求二分图最大匹配。（左右两边点的编号均从1开始）
+ * @param u_num 左边一组点的个数
+ * @param v_num 右边一组点的个数
+ * @return 最大匹配数
+ */
+int hungary(int u_num, int v_num) {
+    int result = 0;
+    memset(link_u, -1, sizeof(link_u));
+
+    for (int i = 1; i &lt;= u_num; ++i) {
+        memset(matched, false, sizeof(matched));
+        if (dfs(i, v_num)) ++result;
+    }
+    return result;
+}
+
+int main() {
+    int k, m, n;
+    while (scanf("%d", &amp;k) &amp;&amp; k) {
+        scanf("%d %d", &amp;m, &amp;n);
+        memset(graph, false, sizeof(graph));
+
+        int u, v;
+        while (k--) {
+            scanf("%d %d", &amp;u, &amp;v);
+            graph[u][v] = true;
+        }
+        printf("%d\n", hungary(m, n));
+    }
+    return 0;
+}
+</code></pre>
+<h2 id="二分图最大权匹配--km算法复杂度on3"><a class="header" href="#二分图最大权匹配--km算法复杂度on3">二分图最大权匹配:  KM算法，复杂度O(n^3)</a></h2>
+<p>考虑到二分图中两个集合中的点并不总是相同，为了能应用 KM 算法解决二分图的最大权匹配，需要先作如下处理：将两个集合中点数比较少的补点，使得两边点数相同，再将不存在的边权重设为 0，这种情况下，问题就转换成求 <strong>最大权完美匹配问题</strong> ，从而能应用 KM 算法求解。</p>
+<p>给定一张二分图，左右部均有 n 个点，共有 m 条带权边，且保证有完美匹配。</p>
+<p>求一种完美匹配的方案，使得最终匹配边的边权之和最大。</p>
+<p>输出第一行表示答案。第二行共 <em>n</em> 个整数 $$a_1,a_2,a_3\cdots a_n$$，其中 $$a_i$$表示完美匹配下与<strong>右部</strong>第 i 个点相匹配的左部点的编号。</p>
+<pre><code class="language-c++">//
+// Created by Jiang Yinzuo on 2020/9/28.
+//
+
+#include &lt;cstdio&gt;
+#include &lt;cstring&gt;
+
+class KM {
+
+#define MAX_N 605
+#define INF 0x3f3f3f3f
+
+public:
+    static long long graph[MAX_N][MAX_N]; // 边权邻接矩阵
+private:
+    static long long lx[MAX_N], ly[MAX_N], slack[MAX_N], pre[MAX_N];
+    static int linker[MAX_N]; // linker[i]：与右边第i个点相匹配的左边的点
+    static bool vis_y[MAX_N]; // 标记右边点集是否被访问过
+
+    static void bfs(int k, int n);
+
+public:
+    static long long solve(int n);
+
+    static void print_linker(int n) {
+        for (int i = 1; i &lt;= n - 1; ++i) {
+            printf("%d ", KM::linker[i]);
+        }
+        printf("%d\n", KM::linker[n]);
+    }
+};
+
+long long KM::graph[MAX_N][MAX_N]; // 边权邻接矩阵
+long long  KM::lx[MAX_N], KM::ly[MAX_N], KM::slack[MAX_N], KM::pre[MAX_N];
+bool KM::vis_y[MAX_N];
+int KM::linker[MAX_N];
+
+void KM::bfs(int k, int n) {
+    long long x, y = 0, yy = 0, delta;
+    memset(pre, 0, sizeof(pre));
+    for (int i = 1; i &lt;= n; i++) slack[i] = INF;
+    linker[y] = k;
+    while (true) {
+        x = linker[y];
+        delta = INF;
+        vis_y[y] = true;
+        for (int i = 1; i &lt;= n; i++) {
+            if (!vis_y[i]) {
+                if (slack[i] &gt; lx[x] + ly[i] - graph[x][i]) {
+                    slack[i] = lx[x] + ly[i] - graph[x][i];
+                    pre[i] = y;
+                }
+                if (slack[i] &lt; delta) delta = slack[i], yy = i;
+            }
+        }
+        for (int i = 0; i &lt;= n; i++) {
+            if (vis_y[i]) lx[linker[i]] -= delta, ly[i] += delta;
+            else slack[i] -= delta;
+        }
+        y = yy;
+        if (linker[y] == -1) break;
+    }
+    while (y) linker[y] = linker[pre[y]], y = pre[y];
+}
+
+long long KM::solve(int n) {
+    memset(lx, 0, sizeof(lx));
+    memset(ly, 0, sizeof(ly));
+    memset(linker, -1, sizeof(linker));
+    for (int i = 1; i &lt;= n; i++) {
+        memset(vis_y, false, sizeof(vis_y));
+        bfs(i, n);
+    }
+    long long res = 0;
+    for (int i = 1; i &lt;= n; i++) {
+        if (linker[i] != -1) {
+            res += graph[linker[i]][i];
+        }
+    }
+    return res;
+}
+
+int main() {
+    int n;
+    static long long m, x, y, weight;
+    scanf("%lld %lld", &amp;n, &amp;m);
+    for (int i = 1; i &lt;= n; i++)
+        for (int j = 1; j &lt;= n; j++)
+            KM::graph[i][j] = -INF;
+    for (int i = 0; i &lt; m; ++i) {
+        scanf("%lld %lld %lld", &amp;x, &amp;y, &amp;weight);
+        KM::graph[x][y] = weight;
+    }
+
+    printf("%lld\n", KM::solve(n));
+    KM::print_linker(n);
+    return 0;
+}
+</code></pre>
+<p>2019南京区域赛spy</p>
+<pre><code class="language-c++">#include &lt;cstdio&gt;
+#include &lt;cstring&gt;
+
+class KM {
+
+#define MAX_N 605
+#define INF 0x3f3f3f3f
+
+public:
+    static long long graph[MAX_N][MAX_N]; // 边权邻接矩阵
+
+private:
+    static long long lx[MAX_N], ly[MAX_N], linker[MAX_N], slack[MAX_N], pre[MAX_N];
+    static bool vis_y[MAX_N]; // 标记右边点集是否被访问过
+
+    static void bfs(long long k, int n);
+
+public:
+    static long long solve(int n);
+};
+
+
+long long KM::graph[MAX_N][MAX_N]; // 边权邻接矩阵
+long long  KM::lx[MAX_N], KM::ly[MAX_N], KM::linker[MAX_N], KM::slack[MAX_N], KM::pre[MAX_N];
+bool  KM::vis_y[MAX_N];
+
+void KM::bfs(long long k, int n) {
+    long long x, y = 0, yy = 0, delta;
+    memset(pre, 0, sizeof(pre));
+    for (int i = 1; i &lt;= n; i++) slack[i] = INF;
+    linker[y] = k;
+    while (true) {
+        x = linker[y];
+        delta = INF;
+        vis_y[y] = true;
+        for (int i = 1; i &lt;= n; i++) {
+            if (!vis_y[i]) {
+                if (slack[i] &gt; lx[x] + ly[i] - graph[x][i]) {
+                    slack[i] = lx[x] + ly[i] - graph[x][i];
+                    pre[i] = y;
+                }
+                if (slack[i] &lt; delta) delta = slack[i], yy = i;
+            }
+        }
+        for (int i = 0; i &lt;= n; i++) {
+            if (vis_y[i]) lx[linker[i]] -= delta, ly[i] += delta;
+            else slack[i] -= delta;
+        }
+        y = yy;
+        if (linker[y] == -1) break;
+    }
+    while (y) linker[y] = linker[pre[y]], y = pre[y];
+}
+
+long long KM::solve(int n) {
+    memset(lx, 0, sizeof(lx));
+    memset(ly, 0, sizeof(ly));
+    memset(linker, -1, sizeof(linker));
+    for (int i = 1; i &lt;= n; i++) {
+        memset(vis_y, false, sizeof(vis_y));
+        bfs(i, n);
+    }
+    long long res = 0;
+    for (int i = 1; i &lt;= n; i++) {
+        if (linker[i] != -1) {
+            res += graph[linker[i]][i];
+        }
+    }
+    return res;
+}
+
+int main() {
+    static long long  a[MAX_N], b[MAX_N], c[MAX_N], p[MAX_N];
+    int n;
+    scanf("%d", &amp;n);
+    for (int i = 1; i &lt;= n; i++) scanf("%lld", &amp;a[i]);
+    for (int i = 1; i &lt;= n; i++) scanf("%lld", &amp;p[i]);
+    for (int i = 1; i &lt;= n; i++) scanf("%lld", &amp;b[i]);
+    for (int i = 1; i &lt;= n; i++) scanf("%lld", &amp;c[i]);
+    for (int i = 1; i &lt;= n; i++) {
+        for (int j = 1; j &lt;= n; j++) {
+            long long s = 0;
+            for (int k = 1; k &lt;= n; k++) {
+                if (b[i] + c[j] &gt; a[k]) s += p[k];
+            }
+            KM::graph[i][j] = s;
+        }
+    }
+
+    printf("%lld\n", KM::solve(n));
+    return 0;
+}
+</code></pre>
+<h2 id="稳定婚姻问题gale-shapley---婚姻匹配算法算法"><a class="header" href="#稳定婚姻问题gale-shapley---婚姻匹配算法算法">稳定婚姻问题，Gale-Shapley---婚姻匹配算法算法</a></h2>
+<p>图论算法：稳定婚姻问题，如何找到最适合自己的另一半 - 博文视点Broadview的文章 - 知乎</p>
+<p>https://zhuanlan.zhihu.com/p/436991506</p>
+<p>https://blog.csdn.net/Air_hjj/article/details/70828937</p>
+<h2 id="网络流"><a class="header" href="#网络流">网络流</a></h2>
+<h3 id="最大流"><a class="header" href="#最大流">最大流</a></h3>
+<h4 id="dinic"><a class="header" href="#dinic">Dinic</a></h4>
+<p>时间复杂度：$$O(n^2m)$$</p>
+<p>BFS构造分层图。DFS根据分层往下遍历，回溯时更新边权。</p>
+<p><a href="https://www.luogu.com.cn/problem/solution/P3376">洛谷P3376</a></p>
+<pre><code class="language-c++">#include &lt;cstdio&gt;
+#include &lt;queue&gt;
+#include &lt;algorithm&gt;
+
+#define MAX_V_NUM 200
+#define MAX_E_NUM 5000
+
+const int INF = 0x3fffffff;
+int edge_idx = 1, start_head[MAX_V_NUM + 4];
+
+/* 2、3是一对反向边；4、5是一对反向边... */
+struct Edge {
+    int to, next, remain_capacity;
+    static int head[MAX_V_NUM + 4];
+} edges[MAX_E_NUM * 2 + 4];
+
+int Edge::head[MAX_V_NUM + 4] = {0};
+
+int depth[MAX_V_NUM + 4];
+
+/**
+ * 添加双向边
+ * @param u 起点
+ * @param v 终点
+ * @param w 边权
+ */
+static void add_edges(int u, int v, int w) {
+    edges[++edge_idx] = {v, Edge::head[u], w};
+    Edge::head[u] = edge_idx;
+
+    edges[++edge_idx] = {u, Edge::head[v], 0};
+    Edge::head[v] = edge_idx;
+}
+
+
+/* 在残量网络中构造分层图 */
+bool bfs(int source, int n, int target) {
+    for (int i = 1; i &lt;= n; i++) depth[i] = INF;
+    std::queue&lt;int&gt; q;
+    q.push(source);
+    depth[source] = 0;
+    start_head[source] = Edge::head[source];
+    while (!q.empty()) {
+        int x = q.front();
+        q.pop();
+        for (int i = Edge::head[x]; i; i = edges[i].next) {
+            int v = edges[i].to;
+            if (edges[i].remain_capacity &gt; 0 &amp;&amp; depth[v] == INF) {
+                q.push(v);
+                start_head[v] = Edge::head[v];
+                depth[v] = depth[x] + 1;
+                if (v == target) return true;
+            }
+        }
+    }
+    return false;
+}
+
+/**
+ * 只对下一层级的点进行dfs
+ * @param cur_v 当前所在的点
+ * @param cur_min_flow 增广路上最小的边权(剩余容量)
+ * @return 经过cur_v流出的总容量
+ */
+int dfs(int cur_v, int cur_min_flow, const int target) {
+    if (cur_v == target) return cur_min_flow;
+    // min_flow是当前最小的剩余容量
+    int min_flow, result = 0;
+    for (int i = start_head[cur_v]; i &amp;&amp; cur_min_flow &gt; 0; i = edges[i].next) {
+        // 当前弧优化
+        start_head[cur_v] = i;
+        int next_v = edges[i].to;
+        if (edges[i].remain_capacity &gt; 0 &amp;&amp; (depth[next_v] == depth[cur_v] + 1)) {
+            min_flow = dfs(next_v, std::min(cur_min_flow, edges[i].remain_capacity), target);
+            // 剪枝，去掉增广完毕的点
+            if (min_flow == 0) depth[next_v] = INF;
+            edges[i].remain_capacity -= min_flow;
+            edges[i ^ 1].remain_capacity += min_flow;
+            result += min_flow;
+            cur_min_flow -= min_flow;
+        }
+    }
+    return result;
+}
+
+
+int main() {
+    int n, m, source, target;
+    scanf("%d %d %d %d", &amp;n, &amp;m, &amp;source, &amp;target);
+    int u, v, w;
+    for (int i = 1; i &lt;= m; i++) {
+        scanf("%d %d %d", &amp;u, &amp;v, &amp;w);
+        add_edges(u, v, w);
+    }
+
+    long long ans = 0;
+    while (bfs(source, n, target)) {
+        ans += dfs(source, INF, target);
+    }
+    printf("%lld\n", ans);
+    return 0;
+}
+
+</code></pre>
+<h2 id="最短路"><a class="header" href="#最短路">最短路</a></h2>
+<h3 id="dijkstra"><a class="header" href="#dijkstra">Dijkstra</a></h3>
+<pre><code class="language-c++">//
+// Created by Jiang Yinzuo on 2020/3/8.
+// hdu2544
+
+#include &lt;cstdio&gt;
+#include &lt;queue&gt;
+#include &lt;cstring&gt;
+
+const long long MAX_LONG_LONG = 9223372036854775807;
+
+struct Edge {
+    static int edge_idx;
+    static int heads[100005];
+    int to;
+    long long distance;
+    int next;
+
+    bool operator&lt;(Edge &amp;e) const {
+        return distance &lt; e.distance;
+    }
+} edges[200005];
+
+int Edge::edge_idx = 0;
+int Edge::heads[100005] = {0};
+
+struct Vertex {
+    int v;
+    long long distance;
+
+    Vertex(int v, long long distance) : v(v), distance(distance) {}
+
+    bool operator&lt;(const Vertex &amp;vertex) const {
+        return distance &gt; vertex.distance;
+    }
+};
+
+void add_edge(int from, int to, long long distance) {
+    edges[++Edge::edge_idx] = {to, distance, Edge::heads[from]};
+    Edge::heads[from] = Edge::edge_idx;
+}
+
+
+long long distance[100005];
+bool visited[100005];
+
+void dijkstra(int vertex_count) {
+
+    memset(visited, false, sizeof(visited));
+    distance[1] = 0;
+    for (int i = 2; i &lt;= vertex_count; ++i) {
+        distance[i] = MAX_LONG_LONG;
+    }
+
+    std::priority_queue&lt;Vertex&gt; vertex_queue;
+
+    // 1是起点
+    vertex_queue.push({1, 0});
+
+    while (!vertex_queue.empty()) {
+        Vertex cur_v = vertex_queue.top();
+        vertex_queue.pop();
+        if (visited[cur_v.v]) continue;
+
+        // 搜索到终点结束
+        if (cur_v.v == vertex_count) break;
+
+        visited[cur_v.v] = true;
+
+        for (int i = Edge::heads[cur_v.v]; i; i = edges[i].next) {
+            if (!visited[edges[i].to] &amp;&amp; distance[edges[i].to] &gt; distance[cur_v.v] + edges[i].distance) {
+                distance[edges[i].to] = distance[cur_v.v] + edges[i].distance;
+                vertex_queue.push({edges[i].to, distance[edges[i].to]});
+            }
+        }
+    }
+    printf("%lld\n", distance[vertex_count]);
+}
+
+int main() {
+    int vertex_count, road_count;
+
+    int from, to, tmp_dis;
+    while (~scanf("%d %d", &amp;vertex_count, &amp;road_count) &amp;&amp; vertex_count &amp;&amp; road_count) {
+        Edge::edge_idx = 0;
+        memset(Edge::heads, 0, sizeof(Edge::heads));
+
+        for (int i = 0; i &lt; road_count; ++i) {
+            scanf("%d %d %d", &amp;from, &amp;to, &amp;tmp_dis);
+            add_edge(from, to, tmp_dis);
+            add_edge(to, from, tmp_dis);
+        }
+        dijkstra(vertex_count);
+    }
+    return 0;
+}
+</code></pre>
+<h3 id="floyd"><a class="header" href="#floyd">Floyd</a></h3>
+<pre><code class="language-c++">//
+// Created by Jiang Yinzuo on 2020/7/18.
+// hdu2544
+
+#include &lt;cstdio&gt;
+#include &lt;algorithm&gt;
+
+const int INF = 0x3f3f3f3f;
+int graph[100][100];
+
+void floyd(int n) {
+    for (int k = 1; k &lt;= n; ++k) {
+        for (int i = 1; i &lt;= n; ++i) {
+            for (int j = 1; j &lt;= n; ++j) {
+                graph[i][j] = std::min(graph[i][j], graph[i][k] + graph[k][j]);
+            }
+        }
+    }
+}
+
+int main() {
+    int n, m;
+    while (~scanf("%d %d", &amp;n, &amp;m) &amp;&amp; n &amp;&amp; m) {
+        int u, v, w;
+        for (int i = 1; i &lt;= n; ++i) {
+            for (int j = 1; j &lt;= n; ++j) {
+                graph[i][j] = INF;
+            }
+        }
+        for (int i = 0; i &lt; m; ++i) {
+            scanf("%d %d %d", &amp;u, &amp;v, &amp;w);
+            graph[u][v] = graph[v][u] = w;
+        }
+        floyd(n);
+        printf("%d\n", graph[1][n]);
+    }
+
+    return 0;
+}
+</code></pre>
+<h3 id="spfa"><a class="header" href="#spfa">SPFA</a></h3>
+<pre><code class="language-c++">//
+// Created by Jiang Yinzuo on 2020/7/19.
+// luogu3371
+
+#include &lt;cstdio&gt;
+#include &lt;queue&gt;
+
+#define MAX_V_NUM 10000
+#define MAX_EDGE_NUM 500000
+
+const int INF = 0x7fffffff;
+
+struct Edge {
+    int to, next, weight;
+    static int idx;
+    static int head[MAX_V_NUM + 2];
+} edges[MAX_EDGE_NUM + 2];
+
+int Edge::idx = 0;
+int Edge::head[MAX_V_NUM + 2] = {0};
+
+inline void add_edge(int u, int v, int weight) {
+    edges[++Edge::idx] = {v, Edge::head[u], weight};
+    Edge::head[u] = Edge::idx;
+}
+
+int distance[MAX_V_NUM + 2];
+
+void spfa(int n, int start_v) {
+
+    static bool in_queue[MAX_V_NUM + 2];
+    for (int i = 0; i &lt;= n; ++i) {
+        distance[i] = INF;
+        in_queue[i] = false;
+    }
+    std::queue&lt;int&gt; v_queue;
+    v_queue.push(start_v);
+    in_queue[start_v] = true;
+    distance[start_v] = 0;
+
+    while (!v_queue.empty()) {
+        int cur_v = v_queue.front();
+        v_queue.pop();
+        in_queue[cur_v] = false;
+        for (int i = Edge::head[cur_v]; i; i = edges[i].next) {
+            int to = edges[i].to;
+            if (distance[cur_v] + edges[i].weight &lt; distance[to]) {
+                distance[to] = distance[cur_v] + edges[i].weight;
+                if (!in_queue[to]) {
+                    v_queue.push(to);
+                    in_queue[to] = true;
+                }
+            }
+        }
+    }
+}
+
+int main() {
+    int n, m, start;
+    scanf("%d %d %d", &amp;n, &amp;m, &amp;start);
+
+    int u, v, weight;
+    for (int i = 0; i &lt; m; ++i) {
+        scanf("%d %d %d", &amp;u, &amp;v, &amp;weight);
+        add_edge(u, v, weight);
+    }
+    spfa(n, start);
+    for (int i = 1; i &lt;= n; ++i) {
+        printf("%d%c", distance[i], (i != n ? ' ' : '\n'));
+    }
+    return 0;
+}
+</code></pre>
+<h2 id="差分约束与判负环"><a class="header" href="#差分约束与判负环">差分约束与判负环</a></h2>
+<p><strong>差分约束系统</strong> 是一种特殊的$$n$$元一次不等式组，它包含$$n$$个变量$$x_1,x_2,...,x_n$$以及$$m$$个约束条件，每个约束条件是由两个其中的变量做差构成的，形如 $$x_i - x_j \le c_k$$，其中$$c_k$$ 是常数（可以是任意整数）。我们要解决的问题是：求一组解$$x_1=a_1, x_2=a_2,...,x_n = a_n$$ ，使得所有的约束条件得到满足，否则判断出无解。</p>
+<p>差分约束系统中的每个约束条件 $$x_i - x_j \le c_k$$ 都可以变形成 $$x_i \le x_j + c_k$$ ，这与单源最短路中的三角形不等式$$dist[y] \le dist[x] + z$$ 非常相似。因此，我们可以把每个变量$$x_i$$ 看做图中的一个结点，对于每个约束条件$$x_i - x_j \le c_k$$ ，从结点$$j$$ 向结点$$i$$ 连一条长度为 $$c_k$$的有向边。</p>
+<p>注意到，如果$${a_1, a_2, ...,a_n}$$ 是该差分约束系统的一组解，那么对于任意的常数$$d$$ ，$${a_1 + d, a_2 + d, ...,a_n + d}$$ 显然也是该差分约束系统的一组解，因为这样做差后$$d$$ 刚好被消掉。</p>
+<p>设$$dist[0] = 0$$ 并向每一个点连一条边，跑单源最短路，若图中存在负环，则给定的差分约束系统无解，否则，$$x_i = dist[i]$$ 为该差分约束系统的一组解。</p>
+<p>一般使用 Bellman-Ford 或队列优化的 Bellman-Ford（俗称 SPFA，在某些随机图跑得很快）判断图中是否存在负环，最坏时间复杂度为$$O(nm)$$ 。</p>
+<div class="table-wrapper"><table><thead><tr><th>题意</th><th>转换</th><th>加边</th></tr></thead><tbody>
+<tr><td>$$x_a - x_b \ge c$$</td><td>$$x_b - x_a \le -c$$</td><td>add_edge(a, b, -c)</td></tr>
+<tr><td>$$x_a - x_b \le c$$</td><td>$$x_a - x_b \le c$$</td><td>add_edge(b, a, c)</td></tr>
+<tr><td>$$x_a = x_b$$</td><td>$$x_a - x_b \le 0, \space x_b - x_a \le 0$$</td><td>add_edge(b, a, 0) add_edge(a, b, 0)</td></tr>
+</tbody></table>
+</div>
+<pre><code class="language-c++">//
+// Created by Jiang Yinzuo on 2020/7/19.
+// luogu 1993
+
+#include &lt;cstdio&gt;
+#include &lt;queue&gt;
+
+#define MAX_V_NUM 10000
+#define MAX_EDGE_NUM 500000
+
+const int INF = 0x7fffffff;
+
+struct Edge {
+    int to, next, weight;
+    static int idx;
+    static int head[MAX_V_NUM + 2];
+} edges[MAX_EDGE_NUM + 2];
+
+int Edge::idx = 0;
+int Edge::head[MAX_V_NUM + 2] = {0};
+
+inline void add_edge(int u, int v, int weight) {
+    edges[++Edge::idx] = {v, Edge::head[u], weight};
+    Edge::head[u] = Edge::idx;
+}
+
+int distance[MAX_V_NUM + 2];
+
+/**
+ * 判断是否有负环
+ * @param n 图中点的个数
+ * @param start_v 起点
+ * @return 有负环: true; 没有: false
+ */
+bool spfa(int n, int start_v) {
+
+    static bool in_queue[MAX_V_NUM + 2];
+    static int count[MAX_V_NUM + 2];
+    for (int i = 0; i &lt;= n; ++i) {
+        distance[i] = INF;
+        in_queue[i] = false;
+        count[i] = 0;
+    }
+    std::queue&lt;int&gt; v_queue;
+    v_queue.push(start_v);
+    in_queue[start_v] = true;
+    distance[start_v] = 0;
+
+    while (!v_queue.empty()) {
+        int cur_v = v_queue.front();
+        v_queue.pop();
+        in_queue[cur_v] = false;
+        for (int i = Edge::head[cur_v]; i; i = edges[i].next) {
+            int to = edges[i].to;
+            if (distance[cur_v] + edges[i].weight &lt; distance[to]) {
+                distance[to] = distance[cur_v] + edges[i].weight;
+                if (++count[to] &gt;= n) return true;
+                if (!in_queue[to]) {
+                    v_queue.push(to);
+                    in_queue[to] = true;
+                }
+            }
+        }
+    }
+    return false;
+}
+
+int main() {
+    int n, m;
+    scanf("%d %d", &amp;n, &amp;m);
+
+    int op, u, v, c;
+    for (int i = 0; i &lt; m; ++i) {
+        scanf("%d", &amp;op);
+        if (op == 1) {
+            scanf("%d %d %d", &amp;u, &amp;v, &amp;c);
+            add_edge(u, v, -c);
+        } else if (op == 2) {
+            scanf("%d %d %d", &amp;u, &amp;v, &amp;c);
+            add_edge(v, u, c);
+        } else {
+            scanf("%d %d", &amp;u, &amp;v);
+            add_edge(u, v, 0);
+            add_edge(v, u, 0);
+        }
+    }
+    // 保证图是连通的
+    for (int i = 1; i &lt;= n; ++i)
+        add_edge(n + 1, i, 0);
+    puts(spfa(n + 1, n + 1) ? "No" : "Yes");
+    return 0;
+}
+</code></pre>
+<h4 id="spfa判负环"><a class="header" href="#spfa判负环">SPFA判负环</a></h4>
+<pre><code class="language-c++">//
+// Created by Jiang Yinzuo on 2020/7/19.
+// luogu p3385
+
+#include &lt;cstdio&gt;
+#include &lt;queue&gt;
+
+#define MAX_V_NUM 2003
+#define MAX_EDGE_NUM 6003
+
+const int INF = 0x7fffffff;
+
+struct Edge {
+    int to, next, weight;
+    static int idx;
+    static int head[MAX_V_NUM + 2];
+} edges[MAX_EDGE_NUM + 2];
+
+int Edge::idx = 0;
+int Edge::head[MAX_V_NUM + 2] = {0};
+
+inline void add_edge(int u, int v, int weight) {
+    edges[++Edge::idx] = {v, Edge::head[u], weight};
+    Edge::head[u] = Edge::idx;
+}
+
+int distance[MAX_V_NUM + 2];
+
+/**
+ * 判断是否有负环
+ * @param n 图中点的个数
+ * @param start_v 起点
+ * @return 有负环: true; 没有: false
+ */
+bool spfa(int n, int start_v) {
+
+    static bool in_queue[MAX_V_NUM + 2];
+    static int count[MAX_V_NUM + 2];
+    for (int i = 0; i &lt;= n; ++i) {
+        distance[i] = INF;
+        in_queue[i] = false;
+        count[i] = 0;
+    }
+    std::queue&lt;int&gt; v_queue;
+    v_queue.push(start_v);
+    in_queue[start_v] = true;
+    distance[start_v] = 0;
+
+    while (!v_queue.empty()) {
+        int cur_v = v_queue.front();
+        v_queue.pop();
+        in_queue[cur_v] = false;
+        for (int i = Edge::head[cur_v]; i; i = edges[i].next) {
+            int to = edges[i].to;
+            if (distance[cur_v] + edges[i].weight &lt; distance[to]) {
+                distance[to] = distance[cur_v] + edges[i].weight;
+                if (++count[to] &gt;= n) return true;
+                if (!in_queue[to]) {
+                    v_queue.push(to);
+                    in_queue[to] = true;
+                }
+            }
+        }
+    }
+    return false;
+}
+
+int main() {
+    int t;
+    scanf("%d", &amp;t);
+    while (t--) {
+        int n, m;
+        scanf("%d %d", &amp;n, &amp;m);
+        Edge::idx = 0;
+        for (int i = 0; i &lt;= n; ++i) Edge::head[i] = 0;
+        int u, v, w;
+        for (int i = 0; i &lt; m; ++i) {
+            scanf("%d %d %d", &amp;u, &amp;v, &amp;w);
+            add_edge(u, v, w);
+            if (w &gt;= 0) {
+                add_edge(v, u, w);
+            }
+        }
+
+        puts(spfa(n, 1) ? "YES" : "NO");
+    }
+
+    return 0;
+}
+</code></pre>
+<h2 id="最小生成树"><a class="header" href="#最小生成树">最小生成树</a></h2>
+<p>Prim在稠密图中比Kruskal优，在稀疏图中比Kruskal劣</p>
+<h3 id="prim"><a class="header" href="#prim">Prim</a></h3>
+<p>O(E + VlgV)</p>
+<pre><code class="language-C++">//
+// Created by Jiang Yinzuo on 2020/7/18.
+// luogu p3366
+
+#include &lt;cstdio&gt;
+#include &lt;queue&gt;
+#include &lt;cstring&gt;
+
+#define MAX_V_NUM 5000
+#define MAX_E_NUM 200000
+
+const int INF = 0x7fffffff;
+
+struct Edge {
+    int to, next, weight;
+    static int idx;
+    static int head[MAX_V_NUM + 1];
+
+    bool operator&lt;(const Edge &amp;e) const {
+        return this-&gt;weight &lt; e.weight;
+    }
+} edges[MAX_E_NUM * 2 + 1];
+
+int Edge::idx = 0;
+int Edge::head[MAX_V_NUM + 1] = {0};
+
+static inline void add_edge(int u, int v, int weight) {
+    edges[++Edge::idx] = {v, Edge::head[u], weight};
+    Edge::head[u] = Edge::idx;
+}
+
+/**
+ * prim算法求最小生成树
+ * @param n 图中点的个数
+ * @return 最小生成树的权值之和。返回-1表示图不连通
+ */
+int prim(int n) {
+
+    static bool added_v[MAX_V_NUM + 1];
+    static int min_weight[MAX_V_NUM + 1];
+    for (int i = 0; i &lt;= n; ++i) min_weight[i] = INF;
+    memset(added_v, false, sizeof(added_v));
+    int added_v_num = 1;
+    int cur_v = 1;
+    int result = 0;
+    added_v[cur_v] = true;
+    std::priority_queue&lt;std::pair&lt;int, int&gt;, std::vector&lt;std::pair&lt;int, int&gt;&gt;, std::greater&lt;&gt; &gt; queue;
+    for (int i = Edge::head[cur_v]; i; i = edges[i].next) {
+        queue.push({edges[i].weight, edges[i].to});
+    }
+    while (!queue.empty() &amp;&amp; added_v_num &lt; n) {
+        auto edge = queue.top();
+        queue.pop();
+        if (added_v[edge.second]) continue;
+        added_v[edge.second] = true;
+        result += edge.first;
+        added_v_num++;
+        for (int i = Edge::head[edge.second]; i; i = edges[i].next) {
+            if (!added_v[edges[i].to] &amp;&amp; edges[i].weight &lt; min_weight[edges[i].to]) {
+                min_weight[edges[i].to] = edges[i].weight;
+                queue.push({edges[i].weight, edges[i].to});
+            }
+        }
+    }
+    if (added_v_num &lt; n) return -1;
+    return result;
+}
+
+int main() {
+    int n, m;
+    scanf("%d %d", &amp;n, &amp;m);
+    int u, v, w;
+    for (int i = 0; i &lt; m; ++i) {
+        scanf("%d %d %d", &amp;u, &amp;v, &amp;w);
+        add_edge(u, v, w);
+        add_edge(v, u, w);
+    }
+    int result = prim(n);
+    if (result &gt;= 0) printf("%d\n", result);
+    else {
+        printf("orz\n");
+    }
+    return 0;
+}
+</code></pre>
+<p>O(ElgV)</p>
+<h2 id="树"><a class="header" href="#树">树</a></h2>
+<h3 id="图判树"><a class="header" href="#图判树">图判树</a></h3>
+<p>方法一: 图连通且边数等于点数减一就是树。</p>
+<p>方法二: 从任意一点开始DFS，如果DFS过程中有环，那么不是树。同时整个图必须是连通的。</p>
+<h3 id="lca"><a class="header" href="#lca">LCA</a></h3>
+<p>倍增求LCA</p>
+<pre><code class="language-C++">/**
+ * luogu3379
+ */
+
+#include &lt;cstdio&gt;
+#include &lt;algorithm&gt;
+
+using namespace std;
+
+struct Edge {
+    int v;
+    int next;
+} edges[500002 &lt;&lt; 1];
+int heads[500002];
+int total = 0;
+
+int depth[500002] = {0};
+int ancestors[500002][22] = {0};
+
+int LOG_2[500002];
+
+void add_edge(int u, int v) {
+    edges[++total] = {v, heads[u]};
+    heads[u] = total;
+}
+
+void dfs(int cur_v, int parent) {
+    ancestors[cur_v][0] = parent;
+    depth[cur_v] = depth[parent] + 1;
+
+    for (int i = 1; i &lt;= LOG_2[depth[cur_v]]; ++i) {
+        ancestors[cur_v][i] = ancestors[ancestors[cur_v][i-1]][i-1];
+    }
+
+    for (int i = heads[cur_v]; i; i = edges[i].next) {
+        if (edges[i].v != parent) {
+            dfs(edges[i].v, cur_v);
+        }
+    }
+}
+
+int lca(int a, int b) {
+    if (depth[a] &lt; depth[b]) {
+        swap(a, b);
+    }
+    while (depth[a] &gt; depth[b]) {
+        a = ancestors[a][LOG_2[depth[a]-depth[b]]];
+    }
+    if (a == b) {
+        return a;
+    }
+    for (int i = LOG_2[depth[a]]; i &gt;= 0; --i) {
+        if (ancestors[a][i] != ancestors[b][i]) {
+            a = ancestors[a][i];
+            b = ancestors[b][i];
+        }
+    }
+    return ancestors[a][0];
+}
+
+void get_log_2() {
+    LOG_2[1] = 0;
+    for (int i = 2; i &lt;= 500001; ++i) {
+        LOG_2[i] = LOG_2[i&gt;&gt;1] + 1;
+    }
+}
+
+int main() {
+    get_log_2();
+
+    int n, m, s;
+    scanf("%d %d %d", &amp;n, &amp;m, &amp;s);
+
+    int x, y;
+    for (int i = 0; i &lt; n - 1; ++i) {
+        scanf("%d %d", &amp;x, &amp;y);
+        add_edge(x, y);
+        add_edge(y, x);
+    }
+
+    dfs(s, 0);
+
+    int a, b;
+    for (int i = 0; i &lt; m; ++i) {
+        scanf("%d %d", &amp;a, &amp;b);
+        printf("%d\n", lca(a, b));
+    }
+
+    return 0;
+}
+</code></pre>
+<h3 id="树的直径"><a class="header" href="#树的直径">树的直径</a></h3>
+<h4 id="解法"><a class="header" href="#解法">解法</a></h4>
+<h5 id="两次dfsbfs"><a class="header" href="#两次dfsbfs">两次dfs/bfs</a></h5>
+<p>先从任意一点P出发，找离它最远的点Q，再从点Q出发，找离它最远的点W，W到Q的距离就是是的直径</p>
+<h5 id="树形dp"><a class="header" href="#树形dp">树形DP</a></h5>
+<h4 id="树的中心"><a class="header" href="#树的中心">树的中心</a></h4>
+<p>树的中心： 所有节点中，到树中其他节点的最远距离 最小的节点。树的中心有1个或2个。</p>
+<pre><code class="language-c++">
+[leetcode例题](https://leetcode.cn/problems/minimum-height-trees)
+
+```c++
+class Solution {
+public:
+    vector&lt;int&gt; findMinHeightTrees(int n, vector&lt;vector&lt;int&gt;&gt;&amp; edges) {
+        std::vector&lt;std::vector&lt;int&gt;&gt; graph(n);
+        for (auto &amp;e : edges) {
+            graph[e[0]].push_back(e[1]);
+            graph[e[1]].push_back(e[0]);
+        }
+        std::vector&lt;int&gt; parents(n, -1);
+        int x = bfs(graph, parents, 0);
+        int y = bfs(graph, parents, x);
+        std::vector&lt;int&gt; path;
+        while (y != -1) {
+            path.push_back(y);
+            y = parents[y];
+        }
+        return path.size() % 2 == 1 ? std::vector({path[path.size() / 2]}) : std::vector({path[path.size() / 2 - 1], path[path.size() / 2]});
+    }
+
+    int bfs(const std::vector&lt;std::vector&lt;int&gt;&gt; &amp;graph,
+            std::vector&lt;int&gt; &amp;parents,
+            int cur_node) {
+        parents[cur_node] = -1;
+        std::vector&lt;bool&gt; visited(graph.size(), false);
+        visited[cur_node] = true;
+        std::queue&lt;int&gt; q;
+        q.push(cur_node);
+        while (!q.empty()) {
+            cur_node = q.front();
+            q.pop();
+            for (auto child : graph[cur_node]) {
+                if (!visited[child]) {
+                    parents[child] = cur_node;
+                    q.push(child);
+                    visited[child] = true;
+                }
+            }
+        }
+        return cur_node;
+    }
+};
+</code></pre>
+<h2 id="参考文献"><a class="header" href="#参考文献">参考文献</a></h2>
+<div id="refer-anchor-1"></div>- [1] [二分图匹配](https://www.renfei.org/blog/bipartite-matching.html)
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="随机化算法.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="字符串.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="随机化算法.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="字符串.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

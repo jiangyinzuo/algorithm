@@ -1,0 +1,786 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>数据结构 - Algorithms</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    </head>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('light')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="编程语言.html"><strong aria-hidden="true">1.</strong> 编程语言</a></li><li class="chapter-item expanded "><a href="算法基础.html"><strong aria-hidden="true">2.</strong> 算法基础</a></li><li class="chapter-item expanded "><a href="动态规划.html"><strong aria-hidden="true">3.</strong> 动态规划</a></li><li class="chapter-item expanded "><a href="计算几何.html"><strong aria-hidden="true">4.</strong> 计算几何</a></li><li class="chapter-item expanded "><a href="树上问题.html"><strong aria-hidden="true">5.</strong> 树上问题</a></li><li class="chapter-item expanded "><a href="数据结构.html" class="active"><strong aria-hidden="true">6.</strong> 数据结构</a></li><li class="chapter-item expanded "><a href="数论.html"><strong aria-hidden="true">7.</strong> 数论</a></li><li class="chapter-item expanded "><a href="数学.html"><strong aria-hidden="true">8.</strong> 数学</a></li><li class="chapter-item expanded "><a href="随机化算法.html"><strong aria-hidden="true">9.</strong> 随机化算法</a></li><li class="chapter-item expanded "><a href="图论.html"><strong aria-hidden="true">10.</strong> 图论</a></li><li class="chapter-item expanded "><a href="字符串.html"><strong aria-hidden="true">11.</strong> 字符串</a></li><li class="chapter-item expanded "><a href="练习.html"><strong aria-hidden="true">12.</strong> 练习</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Algorithms</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="数据结构"><a class="header" href="#数据结构">数据结构</a></h1>
+<ul>
+<li><a href="#%E5%B9%B6%E6%9F%A5%E9%9B%86">并查集</a>
+<ul>
+<li><a href="#%E5%90%AF%E5%8F%91%E5%BC%8F%E5%90%88%E5%B9%B6">启发式合并</a></li>
+</ul>
+</li>
+<li><a href="#%E6%A0%91%E7%8A%B6%E6%95%B0%E7%BB%84">树状数组</a></li>
+<li><a href="#%E7%BA%BF%E6%AE%B5%E6%A0%91">线段树</a>
+<ul>
+<li><a href="#zkw%E7%BA%BF%E6%AE%B5%E6%A0%91">zkw线段树</a></li>
+</ul>
+</li>
+<li><a href="#st%E8%A1%A8">ST表</a></li>
+<li><a href="#lru-cache">LRU Cache</a></li>
+</ul>
+<h2 id="并查集"><a class="header" href="#并查集">并查集</a></h2>
+<pre><code class="language-C++">//
+// Created by Jiang Yinzuo on 2020/7/18.
+// luogup3367
+
+#include &lt;cstdio&gt;
+
+#define MAX_E_NUM 10004
+
+int parents[MAX_E_NUM];
+
+void init(int n) {
+    for (int i = 1; i &lt;= n; ++i) {
+        parents[i] = i;
+    }
+}
+
+int find_parent(int v) {
+    return parents[v] == v ? v : parents[v] = find_parent(parents[v]);
+}
+
+void union_set(int v1, int v2) {
+    int p1 = find_parent(v1);
+    int p2 = find_parent(v2);
+    parents[p1] = p2;
+}
+
+int main() {
+    int n, m;
+    scanf("%d %d", &amp;n, &amp;m);
+    init(n);
+    int op, u, v;
+    for (int i = 0; i &lt; m; ++i) {
+        scanf("%d %d %d", &amp;op, &amp;u, &amp;v);
+        if (op == 1) {
+            union_set(u, v);
+        } else {
+            puts(find_parent(u) == find_parent(v) ? "Y" : "N");
+        }
+    }
+    return 0;
+}
+</code></pre>
+<h3 id="启发式合并"><a class="header" href="#启发式合并">启发式合并</a></h3>
+<pre><code class="language-c++">//
+// Created by Jiang Yinzuo on 2020/7/18.
+//
+
+#include &lt;cstdio&gt;
+#include &lt;vector&gt;
+
+#define MAX_E_NUM 10004
+
+int parents[MAX_E_NUM];
+
+void init(int n) {
+    for (int i = 1; i &lt;= n; ++i) {
+        parents[i] = i;
+    }
+}
+
+/**
+ * 路径压缩
+ * @param v
+ * @return
+ */
+int find_parent(int v) {
+    return parents[v] == v ? v : parents[v] = find_parent(parents[v]);
+}
+
+std::vector&lt;int&gt; size(MAX_E_NUM, 1);
+
+/**
+ * 启发式合并
+ * @param v1
+ * @param v2
+ */
+void union_set(int v1, int v2) {
+    int p1 = find_parent(v1);
+    int p2 = find_parent(v2);
+    if (p1 == p2) return;
+    if (size[p1] &gt; size[p2])  // 保证小的合到大的里
+        std::swap(p1, p2);
+    parents[p1] = p2;
+    size[p2] += size[p1];
+}
+
+int main() {
+    int n, m;
+    scanf("%d %d", &amp;n, &amp;m);
+    init(n);
+    int op, u, v;
+    for (int i = 0; i &lt; m; ++i) {
+        scanf("%d %d %d", &amp;op, &amp;u, &amp;v);
+        if (op == 1) {
+            union_set(u, v);
+        } else {
+            puts(find_parent(u) == find_parent(v) ? "Y" : "N");
+        }
+    }
+    return 0;
+}
+</code></pre>
+<h2 id="树状数组"><a class="header" href="#树状数组">树状数组</a></h2>
+<p>树状数组特点：</p>
+<ul>
+<li>每一层内，末尾0的个数均相同，第一层0个0，第二次1个0...</li>
+<li>单点更新：节点x的父节点为x+lowbit(x)</li>
+<li>区间查询：不停地减去lowbit(x)直到x为0</li>
+</ul>
+<p>https://blog.csdn.net/TheWayForDream/article/details/118436732</p>
+<pre><code class="language-c++">class TreeArr {
+	int n;
+	vector&lt;int&gt; inner;
+
+    // ((Not x)+1) And x，即求x的最低位1
+	constexpr int lowbit(int x) {
+		return x &amp; (-x);
+	}
+
+public:
+	TreeArr(int _n) : n(_n), inner(_n + 1) {
+	}
+
+	void add_val_to_ith(int i, int val) {
+		while (i &lt;= n) {
+			inner[i] += val;
+			i += lowbit(i);
+		}
+	}
+
+	// [1, i]
+	int query_sum_1_to_i(int i) {
+		int res = 0;
+		while (i &gt; 0) {
+			res += inner[i];
+			i -= lowbit(i);
+		}
+		return res;
+	}
+};
+
+</code></pre>
+<pre><code class="language-c++">template&lt;const int T&gt;
+struct TreeArray {
+    int arr[T + 1];
+
+    int lowbit(int x) {
+        return x &amp; (-x);
+    }
+
+    // add value to arr[i]
+    void update(int i, int value) {
+        while (i &lt;= T) {
+            arr[i] += value;
+            i += lowbit(i);
+        }
+    }
+
+    // query sum of [1, i]
+    int query(int i) {
+        int total = 0;
+        while (i &gt; 0) {
+            total += arr[i];
+            i -= lowbit(i);
+        }
+        return total;
+    }
+};
+</code></pre>
+<h2 id="线段树"><a class="header" href="#线段树">线段树</a></h2>
+<h3 id="zkw线段树"><a class="header" href="#zkw线段树">zkw线段树</a></h3>
+<p>TODO</p>
+<pre><code class="language-c++">#include &lt;cstdio&gt;
+#include &lt;cstring&gt;
+
+namespace seg_tree {
+int arr[50005];
+int tree[50005 &lt;&lt; 2];
+
+/**
+ * 区间查询
+ * @param left 线段树节点左边界
+ * @param right 线段树节点右边界
+ * @param cur_idx 当前线段树节点标记
+ * @param arr_left 区间查询左边界
+ * @param arr_right 区间查询右边界
+ * @return
+ */
+int query(int left, int right, int cur_idx, const int arr_left, const int arr_right) {
+    if (arr_left &lt;= left &amp;&amp; right &lt;= arr_right) {
+        return tree[cur_idx];
+    }
+
+    int mid = (left + right) / 2;
+
+    int result = 0;
+    if (arr_left &lt;= mid) {
+        result = query(left, mid, cur_idx &lt;&lt; 1, arr_left, arr_right);
+    }
+    if (mid + 1 &lt;= arr_right) {
+        result += query(mid + 1, right, (cur_idx &lt;&lt; 1) | 1, arr_left, arr_right);
+    }
+
+    return result;
+}
+
+/**
+ * 单点更新线段树
+ * @param left 线段树节点左边界
+ * @param right 线段树节点右边界
+ * @param cur_idx 当前线段树节点标号
+ * @param arr_idx 更新的原始数组标号
+ * @param value 更新值
+ */
+void update(int left, int right, int cur_idx, const int arr_idx, const int value) {
+    if (left == right) {
+        tree[cur_idx] += value;
+        return;
+    }
+
+    int mid = (left + right) / 2;
+    if (arr_idx &lt;= mid) {
+        update(left, mid, cur_idx &lt;&lt; 1, arr_idx, value);
+    } else {
+        update(mid + 1, right, (cur_idx &lt;&lt; 1) | 1, arr_idx, value);
+    }
+
+    tree[cur_idx] = tree[cur_idx &lt;&lt; 1] + tree[(cur_idx &lt;&lt; 1) | 1];
+}
+
+/**
+ * 建立线段树
+ * @param left 线段树节点左边界
+ * @param right 线段树节点右边界
+ * @param cur_idx 当前线段树节点标号
+ */
+void build(int left, int right, int cur_idx) {
+    if (left == right) {
+        tree[cur_idx] = arr[left];
+        return;
+    }
+
+    int mid = (left + right) / 2;
+    build(left, mid, cur_idx &lt;&lt; 1);
+    build(mid + 1, right, (cur_idx &lt;&lt; 1) | 1);
+    tree[cur_idx] = tree[cur_idx &lt;&lt; 1] + tree[(cur_idx &lt;&lt; 1) | 1];
+}
+}
+
+
+int main() {
+    int t, n;
+    scanf("%d", &amp;t);
+    for (int kase = 1; kase &lt;= t; ++kase) {
+        scanf("%d", &amp;n);
+        for (int i = 1; i &lt;= n; ++i) {
+            scanf("%d", &amp;seg_tree::arr[i]);
+        }
+        seg_tree::build(1, n, 1);
+
+        printf("Case %d:\n", kase);
+
+        char query_str[6];
+        int l, r;
+        while (true) {
+            scanf("%s", query_str);
+            if (strcmp(query_str, "End") == 0) {
+                break;
+            }
+            scanf("%d %d", &amp;l, &amp;r);
+            if (strcmp(query_str, "Query") == 0) {
+                printf("%d\n", seg_tree::query(1, n, 1, l, r));
+            } else if (strcmp(query_str, "Add") == 0) {
+                seg_tree::update(1, n, 1, l, r);
+            } else if (strcmp(query_str, "Sub") == 0) {
+                seg_tree::update(1, n, 1, l, -r);
+            }
+        }
+    }
+    return 0;
+}
+</code></pre>
+<pre><code class="language-c++">/**
+ * luogu3372
+ */
+#include &lt;cstdio&gt;
+
+long long seq[100008];
+long long seg_tree[400008];
+long long add_tag[400008] = {0};
+
+/**
+ * 建立线段树
+ * @param l 区间左端点
+ * @param r 区间右端点
+ * @param num 序号
+ */
+void build(int l, int r, int num) {
+    if (l == r) {
+        seg_tree[num] = seq[l];
+        return;
+    }
+
+    build(l, (l + r) / 2, num &lt;&lt; 1);
+    build((l + r) / 2 + 1, r, num &lt;&lt; 1 | 1);
+
+    seg_tree[num] = seg_tree[num &lt;&lt; 1] + seg_tree[num &lt;&lt; 1 | 1];
+}
+
+/**
+ * 下推懒惰标记
+ * @param l 左区间端点
+ * @param r 右区间端点
+ * @param num 序号
+ */
+void push_down(int l, int r, int num) {
+
+    if (add_tag[num]) {
+        int mid = (r + l) / 2;
+        seg_tree[num &lt;&lt; 1] += add_tag[num] * (mid - l + 1);
+        seg_tree[num &lt;&lt; 1 | 1] += add_tag[num] * (r - mid);
+        add_tag[num &lt;&lt; 1] += add_tag[num];
+        add_tag[num &lt;&lt; 1 | 1] += add_tag[num];
+        add_tag[num] = 0;
+    }
+}
+
+/**
+ * 区间更新
+ * @param update_l 更新区间左端点
+ * @param update_r 更新区间右端点
+ * @param value 更新的值
+ * @param l 当前搜索区间左端点
+ * @param r 当前搜索区间右端点
+ * @param num 线段树序号
+ */
+void update(int update_l, int update_r, long long value, int l, int r, int num) {
+    if (update_l &lt;= l &amp;&amp; r &lt;= update_r) {
+        seg_tree[num] += (r - l + 1) * value;
+        add_tag[num] += value;
+        return;
+    }
+
+    push_down(l, r, num);
+
+    int mid = (l + r) / 2;
+    if (update_l &lt;= mid) {
+        update(update_l, update_r, value, l, mid, num &lt;&lt; 1);
+    }
+    if (mid + 1 &lt;= update_r) {
+        update(update_l, update_r, value, mid + 1, r, num &lt;&lt; 1 | 1);
+    }
+    seg_tree[num] = seg_tree[num &lt;&lt; 1] + seg_tree[num &lt;&lt; 1 | 1];
+}
+
+/**
+ * 区间查询
+ * @param query_l 查询区间左端点
+ * @param query_r 查询区间右端点
+ * @param l 当前搜索区间左端点
+ * @param r 当前搜索区间右端点
+ * @param num 线段树序号
+ * @return 区间查询结果（求区间和）
+ */
+long long query(int query_l, int query_r, int l, int r, int num) {
+
+    if (query_l &lt;= l &amp;&amp; r &lt;= query_r) {
+        return seg_tree[num];
+    }
+
+    push_down(l, r, num);
+
+    long long result = 0;
+    int mid = (l + r) / 2;
+    if (query_l &lt;= mid) {
+        result += query(query_l, query_r, l, mid, num &lt;&lt; 1);
+    }
+    if (mid + 1 &lt;= query_r) {
+        result += query(query_l, query_r, mid + 1, r, num &lt;&lt; 1 | 1);
+    }
+    return result;
+}
+
+int main() {
+    int n, m;
+    scanf("%d %d", &amp;n, &amp;m);
+    for (int i = 1; i &lt;= n; ++i) {
+        scanf("%d", &amp;seq[i]);
+    }
+    build(1, n, 1);
+    int op;
+    long long x, y, k;
+    for (int i = 0; i &lt; m; ++i) {
+        scanf("%d", &amp;op);
+        if (op == 1) {
+            scanf("%lld %lld %lld", &amp;x, &amp;y, &amp;k);
+            update(x, y, k, 1, n, 1);
+        } else {
+            scanf("%lld %lld", &amp;x, &amp;y);
+            printf("%lld\n", query(x, y, 1, n, 1));
+        }
+    }
+    return 0;
+}
+</code></pre>
+<h2 id="st表"><a class="header" href="#st表">ST表</a></h2>
+<pre><code class="language-c++">// luogu3865 ST表模板
+// Created by Jiang Yinzuo on 2020/4/11.
+//
+
+#include &lt;cstdio&gt;
+#include &lt;algorithm&gt;
+
+const int MAX_N = 100009;
+
+int arr[MAX_N];
+
+/**
+ * sparse_table[i][j] 表示区间arr中第i个数开始的2^j个数中的最大值
+ */
+int sparse_table[MAX_N][21];
+
+int LOG_2[MAX_N];
+
+/**
+ * log2对数打表
+ * @param n 最大值
+ */
+void calculate_log(int n) {
+    LOG_2[1] = 0;
+    for (int i = 2; i &lt;= n; ++i) {
+        LOG_2[i] = LOG_2[i &gt;&gt; 1] + 1;
+    }
+}
+
+/**
+ * 查询区间f(left, right)最值
+ * @param left 左端点
+ * @param right 右端点
+ * @return 最值
+ */
+int query(int left, int right) {
+    int mid = LOG_2[right - left + 1];
+
+    // 将f(left, right)分成前2^mid个数和后2^mid个数，分别查询
+    // f(left, right) = max(f(left, left + 2^mid - 1), f(right - (2^mid-1), right))
+    return std::max(sparse_table[left][mid], sparse_table[right - (1 &lt;&lt; mid) + 1][mid]);
+}
+
+/**
+ * 初始化ST表
+ * @param arr 输入序列, 下标从1开始
+ * @param size 序列长度
+ */
+void init(int *arr, int size) {
+
+    // 区间arr中第i个数开始的1个数中的最大值就是第i个数
+    for (int i = 1; i &lt;= size; ++i) sparse_table[i][0] = arr[i];
+
+    // 依次求2^1, 2^2, 2^3, ... size个数中的最大值
+    for (int j = 1; j &lt;= LOG_2[size]; ++j) {
+        for (int i = 1; i + (1 &lt;&lt; j) - 1 &lt;= size; ++i) {
+
+            // f(i, i + 2^j - 1) = max(f(i, i + 2^(j-1) - 1), f(i + 2^(j-1), i + 2^j - 1)
+            sparse_table[i][j] = std::max(sparse_table[i][j-1], sparse_table[i + (1 &lt;&lt; (j-1))][j-1]);
+        }
+    }
+}
+
+int main() {
+    int n, m;
+    scanf("%d %d", &amp;n, &amp;m);
+    calculate_log(n);
+
+    for (int i = 1; i &lt;= n; ++i) {
+        scanf("%d", &amp;arr[i]);
+    }
+    init(arr, n);
+
+    int left, right;
+    for (int i = 0; i &lt; m; ++i) {
+        scanf("%d %d", &amp;left, &amp;right);
+        printf("%d\n", query(left, right));
+    }
+    return 0;
+}
+</code></pre>
+<h2 id="lru-cache"><a class="header" href="#lru-cache">LRU Cache</a></h2>
+<p>迭代器变量声明: <code>std::unordered_map&lt;int, std::list&lt;Entry&gt;::iterator&gt; map;</code></p>
+<p><a href="https://www.nowcoder.com/practice/5dfded165916435d9defb053c63f1e84?tpId=295&amp;tqId=2427094&amp;ru=/exam/oj&amp;qru=/ta/format-top101/question-ranking&amp;sourceUrl=%2Fexam%2Foj">牛客BM100 设计LRU缓存结构</a></p>
+<pre><code class="language-cpp">#include &lt;cassert&gt;
+#include &lt;list&gt;
+#include &lt;unordered_map&gt;
+
+class Solution {
+    using Entry = std::pair&lt;int, int&gt;;
+
+  public:
+    Solution(int capacity) : capacity(capacity) {
+    }
+
+    int get(int key) {
+        auto it = map.find(key);
+        if (it == map.end()) {
+            return -1;
+        }
+        assert(it-&gt;first == key);
+        auto t = it-&gt;second;
+        assert(t-&gt;first == key);
+        int result = t-&gt;second;
+        entries.erase(t);
+        doSet(key, result);
+        return result;
+    }
+
+    void set(int key, int value) {
+        auto it = map.find(key);
+        if (it != map.end()) {
+            map.erase(it);
+        }
+
+        doSet(key, value);
+    }
+  private:
+
+    void doSet(int key, int value) {
+        auto it = entries.emplace_front(key, value);
+        map[key] = entries.begin();
+        if (entries.size() &gt; capacity) {
+            map.erase(entries.back().first);
+            entries.pop_back();
+            assert(entries.size() == capacity);
+        }
+    }
+    int capacity;
+
+    std::list&lt;Entry&gt; entries;
+    std::unordered_map&lt;int, std::list&lt;Entry&gt;::iterator&gt; map;
+};
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="树上问题.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="数论.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="树上问题.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="数论.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>
